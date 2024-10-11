@@ -9,18 +9,18 @@ before_script:
 build_rpm:
   stage: build
   script:
-    - rpmbuild -ba brace.spec
+    - rpmbuild -ba slingshot.spec
   artifacts:
     paths:
-        - build/noarch/brace*.rpm
+        - build/noarch/slingshot*.rpm
 
 build_deb:
   stage: build
   script:
-    - dpkg-deb --root-owner-group --build brace && dpkg-name brace.deb
+    - dpkg-deb --root-owner-group --build slingshot && dpkg-name slingshot.deb
   artifacts:
     paths:
-        - brace*.deb
+        - slingshot*.deb
 
 build_arch:
   stage: build
@@ -30,4 +30,4 @@ build_arch:
     - makepkg
   artifacts:
     paths:
-        - brace*.pkg.tar.*
+        - slingshot*.pkg.tar.*

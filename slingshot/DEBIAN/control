@@ -1,0 +1,8 @@
+Package: Slingshot
+Version: 20240802-2
+Section: custom
+Priority: optional
+Architecture: all
+Essential: no
+Maintainer: Magnesium1062
+Description: "Create the ultimate Linux set-up."
