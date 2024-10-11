@@ -3,7 +3,7 @@ Slingshot
 
 Overview
 --------
-Slingshot is a configuration utility with an emphasis on privacy, security, freedom, & usability. It is based on the excellent Brace project, but with my own tweaks, changes, & additions.
+Slingshot is a configuration utility with an emphasis on privacy, security, freedom, performance, & usability. It is based on the excellent [Brace](https://codeberg.org/divested/brace) project, but with my own tweaks, changes, & additions.
 
 Compatibility
 -------------
