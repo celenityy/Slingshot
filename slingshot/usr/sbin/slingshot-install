@@ -1,0 +1,504 @@
+#!/bin/bash
+
+coloroff='\e[0m';
+black='\e[0;30m';
+blue='\e[0;34m';
+cyan='\e[0;36m';
+green='\e[0;32m';
+purple='\e[0;35m';
+red='\e[0;31m';
+white='\e[0;37m';
+yellow='\e[0;33m';
+
+if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo -e "${red}ERROR: This script needs to be run as root!${coloroff}"; exit 1; fi;
+
+if [ -f /etc/fedora-release ]; then
+	echo "${purple}Welcome! This will allow you to easily install high-quality software from different categories.${coloroff}";
+	echo "${purple}Nothing will be installed without your permission. You will be asked for each app.${coloroff}";
+	echo "${purple}If you don't want any apps from a category, you can simply choose no to skip it!${coloroff}";
+	echo "";
+
+	echo "Would you like to install any web browsers?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "Firefox? (Recommended, Preinstalled)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing Firefox...${coloroff}";
+								dnf install firefox;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								echo "Harden with Phoenix? https://phoenix.celenity.dev (Recommended)";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											bash -c "$(curl -fsSL https://phoenix.celenity.dev/fedora_install.sh)";
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Brave?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Adding Brave's Repository...${coloroff}";
+								dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo;
+								rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc;
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing Brave...${coloroff}";
+								dnf install brave-browser;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Hardened Chromium?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Adding secureblue's hardened-chromium COPR...${coloroff}";
+								dnf copr enable secureblue/hardened-chromium;
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing Hardened Chromium...${coloroff}";
+								dnf install hardened-chromium;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Mullvad Browser?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Adding Mullvad's Repository...${coloroff}";
+								dnf config-manager --add-repo https://repository.mullvad.net/rpm/stable/mullvad.repo;
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing Mullvad Browser...${coloroff}";
+								dnf install mullvad-browser;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Tor Browser?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing Tor Browser...${coloroff}";
+								dnf install tor torbrowser-launcher;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done		
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install any software for Development?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "nano?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update;
+								echo "${red}Installing nano...${coloroff}";
+								dnf install nano;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "VSCodium?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Adding VSCodium's Repository...${coloroff}";
+								dnf config-manager --add-repo https://slingshot.celenity.dev/vscodium.repo;
+								echo "${red}Updating DNF cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing VSCodium...${coloroff}";
+								dnf install codium;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install any software for communication?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "Signal?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing Signal...${coloroff}";
+								flatpak --user install org.signal.Signal;
+								echo "${red}Giving Signal necessary permissions...${coloroff}";
+								flatpak --user override org.signal.Signal --share=network --socket=pulseaudio;
+								echo "${red}Enabling Wayland Support...${coloroff}";
+								flatpak --user override org.signal.Signal --env=ELECTRON_OZONE_PLATFORM_HINT=auto;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Thunderbird?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing Thunderbird...${coloroff}";
+								dnf install thunderbird;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								echo "Harden with Dove? https://dove.celenity.dev (Recommended)";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											bash -c "$(curl -fsSL https://dove.celenity.dev/fedora_install.sh)";
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install any software for media consumption?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "VLC?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove vlc;
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing VLC...${coloroff}";
+								flatpak --user install org.videolan.VLC org.videolan.VLC.Plugin.pause_click org.videolan.VLC.Plugin.fdkaac org.videolan.VLC.Plugin.bdj org.videolan.VLC.Plugin.makemkv;
+								echo "${red}Giving VLC necessary permissions...${coloroff}";
+								flatpak --user override org.videolan.VLC --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Kodi?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove kodi;
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing Kodi...${coloroff}";
+								flatpak --user install tv.kodi.Kodi;
+								echo "${red}Giving Kodi necessary permissions...${coloroff}";
+								flatpak --user override tv.kodi.Kodi --device=dri --share=network --socket=pulseaudio;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "MakeMKV?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing MakeMKV...${coloroff}";
+								flatpak --user install com.makemkv.MakeMKV;
+								echo "${red}Giving MakeMKV necessary permissions...${coloroff}";
+								flatpak --user override com.makemkv.MakeMKV --share=network;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "qBittorrent?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove qbittorrent;
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing Lollypop...${coloroff}";
+								flatpak --user install org.qbittorrent.qBittorrent;
+								echo "${red}Giving qBittorrent necessary permissions...${coloroff}";
+								flatpak --user override org.qbittorrent.qBittorrent --share=network;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Lollypop?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove lollypop;
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing Lollypop...${coloroff}";
+								flatpak --user install org.gnome.Lollypop;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "yt-dlp?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing yt-dlp...${coloroff}";
+								dnf install yt-dlp;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install any software for content creation?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "Audacity?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove audacity audacity-freeworld;
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing Audacity...${coloroff}";
+								flatpak --user install org.audacityteam.Audacity;
+								echo "${red}Giving Audacity necessary permissions...${coloroff}";
+								flatpak --user override org.audacityteam.Audacity --socket=pulseaudio;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "GIMP?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove gimp;
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing GIMP...${coloroff}";
+								flatpak --user install org.gimp.GIMP;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Kdenlive?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove kdenlive;
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing Kdenlive...${coloroff}";
+								flatpak --user install org.kde.kdenlive;
+								break;;
+							No )
+								break;;
+						esac
+					done		
+				echo "OBS?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove obs-studio;
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing OBS...${coloroff}";
+								flatpak --user install com.obsproject.Studio com.obsproject.Studio.Plugin.InputOverlay com.obsproject.Studio.Plugin.Gstreamer com.obsproject.Studio.Plugin.GStreamerVaapi com.obsproject.Studio.Plugin.CompositeBlur com.obsproject.Studio.Plugin.BackgroundRemoval;
+								echo "${red}Giving OBS necessary permissions...${coloroff}";
+								flatpak --user override com.obsproject.Studio --device=dri --socket=pulseaudio;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install any software for Gaming?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "Prism Launcher? (Minecraft)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing Prism Launcher...${coloroff}";
+								flatpak --user install org.prismlauncher.PrismLauncher;
+								echo "${red}Giving Prism Launcher necessary permissions...${coloroff}";
+								flatpak --user override org.prismlauncher.PrismLauncher --device=dri --share=network --socket=pulseaudio;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Steam?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove steam;
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing Steam...${coloroff}";
+								flatpak --user install com.valvesoftware.Steam com.valvesoftware.Steam.Utility.steamtinkerlaunch com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.valvesoftware.Steam.Utility.InhibitScreensaver;
+								echo "${red}Giving Steam necessary permissions...${coloroff}";
+								flatpak --user override com.valvesoftware.Steam --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
+								echo "${red}Disabling hardened_malloc for Steam (Causes it to break)...${coloroff}";
+								flatpak --user override com.valvesoftware.Steam --nofilesystem=host-os --unset-env=LD_PRELOAD;
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing WINE...${coloroff}";
+								dnf install wine;
+								echo "${red}Installing ProtonUp-Qt... (Allows easily installing, updating, & managing Proton, Proton-GE, & Wine)${coloroff}";
+								flatpak --user install net.davidotek.pupgui2;
+								echo "${red}Giving ProtonUp-Qt necessary permissions...${coloroff}";
+								flatpak --user override net.davidotek.pupgui2 --share=network;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install a VPN?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "IVPN?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Adding IVPN's Repository...${coloroff}";
+								dnf config-manager --add-repo https://repo.ivpn.net/stable/fedora/generic/ivpn.repo;
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing IVPN...${coloroff}";
+								dnf install ivpn ivpn-ui;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Mullvad?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Adding Mullvad's Repository...${coloroff}";
+								dnf config-manager --add-repo https://repository.mullvad.net/rpm/stable/mullvad.repo;
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing Mullvad...${coloroff}";
+								dnf install mullvad-vpn;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "ProtonVPN?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing ProtonVPN...${coloroff}";
+								flatpak --user install com.protonvpn.www;
+								echo "${red}Giving ProtonVPN necessary permissions...${coloroff}";
+								flatpak --user override com.protonvpn.www --share=network;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+fi;

@@ -1,8 +1,8 @@
 Package: Slingshot
-Version: 20240802-2
+Version: 20241011-1
 Section: custom
 Priority: optional
 Architecture: all
 Essential: no
-Maintainer: Magnesium1062
+Maintainer: celenity
 Description: "Create the ultimate Linux set-up."

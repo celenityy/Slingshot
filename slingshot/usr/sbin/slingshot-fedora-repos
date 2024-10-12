@@ -1,5 +1,5 @@
 #!/bin/sh
-#Copyright (c) 2018-2020 Divested Computing Group
+#Copyright (c) 2024 celenity, 2018-2020 Divested Computing Group
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,7 @@
 if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo 'This script needs to be run as root!'; exit 1; fi;
 
 if [ -f /etc/fedora-release ] || [ -f /etc/centos-release ]; then
-	echo "Enabling RPM Fusion, Divested RPM, & Flathub";
+	echo "Enabling RPM Fusion, Divested RPM, & replacing system Flathub with user Flathub";
 	echo "Please verify the RPM Fusion signing keys from here: https://rpmfusion.org/keys";
 	echo "Free - F33-40: E9A4 91A3 DE24 7814 E7E0 67EA E06F 8ECD D651 FF2E";
 	echo "Free - EL9: EDC0 0FE7 418C 9DF7 EF49  91A4 7403 EA33 2964 58F3";
@@ -32,12 +32,13 @@ fi;
 if [ -f /etc/fedora-release ]; then
 	dnf install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm";
 	dnf install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm";
-	rm -f /etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo;
-	rm -f /etc/yum.repos.d/rpmfusion-nonfree-steam.repo;
-	rm -f /etc/yum.repos.d/google-chrome.repo;
+	dnf remove fedora-third-party fedora-workstation-repositories;
 	dnf config-manager --add-repo https://codeberg.org/divested/divested-release/raw/branch/master/divested-release.repo;
 	dnf update --refresh;
+	dnf remove fedora-flathub-remote
+	flatpak remote-delete --system flathub
 	flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo;
+	flatpak update
 elif [ -f /etc/centos-release ]; then
 	yum install epel-release;
 	yum localinstall --nogpgcheck "https://download1.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %centos).noarch.rpm";

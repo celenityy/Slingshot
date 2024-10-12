@@ -43,27 +43,7 @@ user::rwx
 group::r-x
 other::r-x
 
-# file: slingshot/etc/apt/apt.conf.d/90-slingshot
-user::rw-
-group::r--
-other::r--
-
-# file: slingshot/etc/chromium
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/etc/chromium/policies
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/etc/chromium/policies/managed
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/etc/chromium/policies/managed/slingshot.json
+# file: slingshot/etc/apt/apt.conf.d/90-brace
 user::rw-
 group::r--
 other::r--
@@ -98,7 +78,7 @@ user::rw-
 group::r--
 other::r--
 
-# file: slingshot/etc/dconf/db/local.d/00-brace-gnome
+# file: slingshot/etc/dconf/db/local.d/00-slingshot-gnome
 user::rw-
 group::r--
 other::r--
@@ -109,6 +89,21 @@ group::r--
 other::r--
 
 # file: slingshot/etc/dconf/db/local.d/00-brace-pantheon
+user::rw-
+group::r--
+other::r--
+
+# file: slingshot/etc/dconf/db/local.d/locks
+user::rwx
+group::r-x
+other::r-x
+
+# file: slingshot/etc/dconf/db/local.d/locks/automount-disable
+user::rw-
+group::r--
+other::r--
+
+# file: slingshot/etc/dconf/db/local.d/locks/privacy
 user::rw-
 group::r--
 other::r--
@@ -128,6 +123,11 @@ user::rw-
 group::r--
 other::r--
 
+# file: slingshot/etc/machine-id
+user::rw-
+group::r--
+other::r--
+
 # file: slingshot/etc/default
 user::rwx
 group::r-x
@@ -143,37 +143,62 @@ user::rw-
 group::r--
 other::r--
 
-# file: slingshot/etc/opt
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/etc/opt/chrome
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/etc/opt/chrome/policies
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/etc/opt/chrome/policies/managed
-user::rwx
-group::r-x
-other::r-x
-
 # file: slingshot/etc/profile.d
 user::rwx
 group::r-x
 other::r-x
 
-# file: slingshot/etc/profile.d/brace-env-overrides.sh
+# file: slingshot/etc/profile.d/slingshot-env-overrides.sh
 user::rw-
 group::r--
 other::r--
 
-# file: slingshot/etc/profile.d/brace-helpers.sh
+# file: slingshot/etc/profile.d/slingshot-helpers.sh
+user::rw-
+group::r--
+other::r--
+
+# file: slingshot/etc/security
+user::rwx
+group::r-x
+other::r-x
+
+# file: slingshot/etc/security/limits.d
+user::rwx
+group::r-x
+other::r-x
+
+# file: slingshot/etc/security/limits.d/30-disable-coredump.conf
+user::rw-
+group::r--
+other::r--
+
+# file: slingshot/etc/ssh
+user::rwx
+group::r-x
+other::r-x
+
+# file: slingshot/etc/ssh/ssh_config.d
+user::rwx
+group::r-x
+other::r-x
+
+# file: slingshot/etc/ssh/ssh_config.d/10-custom.conf
+user::rw-
+group::r--
+other::r--
+
+# file: slingshot/etc/systemd
+user::rwx
+group::r-x
+other::r-x
+
+# file: slingshot/etc/systemd/coredump.conf.d
+user::rwx
+group::r-x
+other::r-x
+
+# file: slingshot/etc/systemd/coredump.conf.d/disable.conf
 user::rw-
 group::r--
 other::r--
@@ -208,7 +233,7 @@ user::rwx
 group::r-x
 other::r-x
 
-# file: slingshot/usr/bin/brace-supplemental-changes
+# file: slingshot/usr/bin/slingshot
 user::rwx
 group::r-x
 other::r-x
@@ -218,77 +243,12 @@ user::rwx
 group::r-x
 other::r-x
 
-# file: slingshot/usr/lib/firefox
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/usr/lib/firefox/mozilla.cfg
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/usr/lib/firefox/defaults
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/usr/lib/firefox/defaults/pref
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/usr/lib/firefox/defaults/pref/local-settings.js
-user::rw-
-group::r--
-other::r--
-
-# file: slingshot/usr/lib/firefox/distribution
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/usr/lib/firefox/distribution/policies.json
-user::rw-
-group::r--
-other::r--
-
-# file: slingshot/usr/lib/firefox-esr
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/usr/lib/firefox-esr/mozilla.cfg
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/usr/lib/firefox-esr/defaults
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/usr/lib/firefox-esr/defaults/pref
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/usr/lib/firefox-esr/defaults/pref/local-settings.js
-user::rwx
-group::r-x
-other::r-x
-
-# file: slingshot/usr/lib/firefox-esr/distribution
-user::rwx
-group::r-x
-other::r-x
-
 # file: slingshot/usr/lib/modprobe.d
 user::rwx
 group::r-x
 other::r-x
 
-# file: slingshot/usr/lib/modprobe.d/brace.conf
+# file: slingshot/usr/lib/modprobe.d/slingshot.conf
 user::rw-
 group::r--
 other::r--
@@ -307,6 +267,11 @@ other::r-x
 user::rwx
 group::r-x
 other::r-x
+
+# file: slingshot/usr/lib/NetworkManager/conf.d/01-transient-hostname.conf
+user::rw-
+group::r--
+other::r--
 
 # file: slingshot/usr/lib/NetworkManager/conf.d/30-nm-privacy.conf
 user::rw-

@@ -1,1 +1,0 @@
-/home/user/Documents/slingshot/slingshot/usr/lib/firefox/defaults/pref/local-settings.js

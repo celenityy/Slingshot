@@ -1,7 +1,7 @@
-# Maintainer: Magnesium1062
+# Maintainer: celenity
 pkgname=Slingshot
-pkgver=20240802
-pkgrel=2
+pkgver=20241011
+pkgrel=1
 pkgdesc="Create the ultimate Linux set-up."
 arch=('any')
 license=('GPL3')
