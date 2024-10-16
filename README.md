@@ -3,7 +3,7 @@ Slingshot
 
 Overview
 --------
-Slingshot is a configuration utility with an emphasis on privacy, security, freedom, performance, & usability. It is based on the excellent [Brace](https://codeberg.org/divested/brace) project, but with my own tweaks, changes, & additions.
+Slingshot is a configuration utility for GNU/Linux Systems with an emphasis on improving privacy, security, & freedom - as well as performance, & usability where possible. It is based on the excellent [Brace](https://codeberg.org/divested/brace) project, but with additions from TommmyTran732's [Linux-Setup-Scripts](https://github.com/TommyTran732/Linux-Setup-Scripts), as well as my own personal tweaks & changes.
 
 Compatibility
 -------------
@@ -32,20 +32,57 @@ Building
 - Debian: dpkg-deb --root-owner-group --build slingshot
 - Fedora: rpmbuild -ba slingshot.spec
 
+Features
+--------
+
+**NOTE:** This list is **not** comprehensive. It is simply a list of notable features & enhancements, but there are many more not documented here!
+
+* Hardens the Linux kernel through various [sysctl settings](slingshot/usr/lib/sysctl.d/60-restrict.conf) & [boot parameters](slingshot/etc/default/grub.d/brace.cfg)
+* Installs & configures [hardened_malloc](https://github.com/GrapheneOS/hardened_malloc) for protection against heap corruption vulnerabilities & for reducing the lifetime of sensitive data in memory.
+* Switches Flathub from acting on the system level to the user level, allowing for easier control & enhanced privacy.
+* Installs [Flatseal](https://github.com/tchx84/Flatseal) & [significantly hardens default Flatpak permissions](slingshot/usr/bin/slingshot#L174) to provide app sandboxing.
+* Installs & configures [Firejail](https://github.com/netblue30/firejail) to provide sandboxing for Web browsers, Electron apps, & apps unavailable as Flatpaks.
+* Installs [ClamAV](https://github.com/Cisco-Talos/clamav) for protection against malicious software.
+* Gives the option to easily replace built-in system apps with the Flatpak variants, for an improvement in privacy & security via Flatpak's sandboxing, & quicker updates.
+* Installs [real-ucode](https://github.com/divestedcg/real-ucode) to install latest CPU microcodes to improve security & include the latest fixes.
+* Automatically installs & configures the [RPM Fusion Free](https://rpmfusion.org/FAQ#Free_repository), [RPM Fusion Free - Tainted](https://rpmfusion.org/FAQ#Free_Tainted), [RPM Fusion Nonfree](https://rpmfusion.org/FAQ#Nonfree_repository), [RPM Fusion Nonfree - Tainted](https://rpmfusion.org/FAQ#Nonfree_Tainted), & [divested-release](https://gitlab.com/divested/divested-release) software repositories.
+* Enforces that DNF repos use HTTPS.
+* Disables DNF [Countme](https://dnf.readthedocs.io/en/latest/conf_ref.html#countme-label).
+* Increases DNF's max parallel downloads to heavily improve performance.
+* Enforces that FWUPD uses HTTPS.
+* Sets Firewalld to prevent incoming connections.
+* Enables [Firewalld Lockdown](https://fedoraproject.org/wiki/Features/FirewalldLockdown) to prevent apps from editing the firewall configuration.
+* Installs firewall-config to allow easily modifying Firewalld through a GUI.
+* Hardens [crypto policies](https://jfearn.fedorapeople.org/fdocs/en-US/Fedora/20/html/Security_Guide/Security_Guide-Encryption-CryptoPolicy.html).
+* Disables [null/empty passwords](https://networklogician.com/2021/04/11/disable-null-passwords/)
+* Sets the device hostname to `localhost` & prevents broadcasting it.
+* Automatically installs codecs for media playback
+* Sets a generic [Machine ID](https://www.man7.org/linux/man-pages/man5/machine-id.5.html)
+
+GNOME specific:
+
+* Disables system animations by default to improve performance & snappiness
+* Enables minimize & maximize buttons by default
+* Disables automounting & auto-running media
+* Disables lockscreen notifications
+* Disables File & App History
+* Disables Problem Reporting
+* Disables Camera & Microphone by default
+* Disables Location Services
+* Automatically deletes trash & temporary files
+* Disables Remote Desktop & Remote Access functionality
+* Disables external Search Providers
+* Enables the "delete permanently" option for Nautilus (GNOME Files)
+
 Contents
 --------
+
 - /etc/apt/apt.conf.d/90-brace					= apt: enable seccomp filter during package install
 - /etc/dconf/db/local.d/00-brace-*				= GNOME/Cinnamon/MATE: change default settings
 - /etc/dconf/profile/user					= Fixup dconf overrides on select distros
 - /etc/profile.d/brace-env-overrides.sh				= profile: sets some environment overrides (eg. umask)
 - /etc/profile.d/brace-helpers.sh				= profile: adds helper aliases (eg. cleaning functions)
 - /etc/tlp.d/00-brace.conf					= TLP: allow for better power savings on AC too
-- /usr/lib64/firefox/mozilla.cfg	= Firefox: change default settings
-    - /usr/lib64/firefox/browser/defaults/local-settings.js
-	- /usr/lib64/firefox/distribution/policies.json
-	- /usr/lib64/thunderbird/defaults/pref/userjs-*.js [TODO]
-- /etc/chromium/policies/managed/brace.json			= Chromium: change default settings [TODO]
-	- /etc/opt/chrome/policies/managed/brace.json
 - /usr/lib/modprobe.d/brace.conf				= kernel: disable/block unsafe modules
 - /usr/lib/modprobe.d/wireless-perf.conf			= kernel: increase Wi-Fi performance for b43 and iwlwifi
 - /usr/lib/NetworkManager/conf.d/30-nm-privacy.conf		= NetworkManager: enables MAC randomization and IPv6 privacy extensions and disables connectivity checks
