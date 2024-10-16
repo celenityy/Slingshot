@@ -120,10 +120,40 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install any software for Development?";
+	echo "Would you like to install software for Development?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
+				echo "Fedora's Recommended Developer Tools?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update;
+								echo "${red}Installing the "Development Tools" group...${coloroff}";
+								dnf group install --with-optional "Development Tools";
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "General Development Languages/Support/Dependencies?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update;
+								echo "${red}Installing the General Development Languages/Support/Dependencies...${coloroff}";
+								dnf install install cargo cmake coreutils copr-rpmbuild fedpkg git-core make maven mercurial mock pacman perl proguard rpkg rpm-build rpmdevtools rpmlint ruby rust;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done				
 				echo "nano?";
 				select yn in "Yes" "No"; do
 					case $yn in
@@ -162,7 +192,91 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install any software for communication?";
+	echo "Would you like to install software for compatibility with Android devices?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "ADB?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing ADB...${coloroff}";
+								dnf install android-tools;
+								echo "${red}Adding android-udev-rules COPR...${coloroff}";
+								dnf copr enable nielsenb/android-udev-rules;
+								echo "${red}Installing android-udev-rules...${coloroff}";
+								dnf install android-udev-rules;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Android Studio?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing Android Studio...${coloroff}";
+								flatpak --user install com.google.AndroidStudio;
+								echo "${red}Giving Android Studio necessary permissions...${coloroff}";
+								flatpak --user override com.google.AndroidStudio --device=dri --device=kvm --share=network;
+								break;;
+							No )
+								break;;
+						esac
+					done				
+				echo "enjarify?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update --refresh;
+								echo "${red}Installing enjarify...${coloroff}";
+								dnf install enjarify;
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install software for virtualization?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "Fedora's Recommended Virtualization Software?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Updating DNF Cache...${coloroff}";
+								dnf update;
+								echo "${red}Installing the "Virtualization" group...${coloroff}";
+								dnf group install --with-optional "Virtualization";
+								echo "${red}Updating Firejail...${coloroff}";
+								firecfg;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install software for communication?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
@@ -214,7 +328,7 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install any software for media consumption?";
+	echo "Would you like to install software for media consumption?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
@@ -320,7 +434,7 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install any software for content creation?";
+	echo "Would you like to install software for content creation?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
@@ -351,6 +465,21 @@ if [ -f /etc/fedora-release ]; then
 								flatpak update;
 								echo "${red}Installing GIMP...${coloroff}";
 								flatpak --user install org.gimp.GIMP;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "HandBrake?";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove handbrake;
+								echo "${red}Updating Flatpak Cache...${coloroff}";
+								flatpak update;
+								echo "${red}Installing HandBrake...${coloroff}";
+								flatpak --user install fr.handbrake.ghb;
 								break;;
 							No )
 								break;;
@@ -394,7 +523,7 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install any software for Gaming?";
+	echo "Would you like to install software for Gaming?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
