@@ -695,6 +695,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf autoremove;
 		firecfg;
 	fi;
+	
+	echo "Done! :) Now make sure to run slingshot again - this time without sudo, for additional options and configurations.";
 else
 	#Looks
 	if [ -d "/usr/share/fonts/adobe-source-code-pro" ]; then
@@ -806,5 +808,3 @@ else
 		esac
 	done
 fi;
-
-echo "Done! :) Now make sure to run slingshot again - this time without sudo, for additional options and configurations.";
