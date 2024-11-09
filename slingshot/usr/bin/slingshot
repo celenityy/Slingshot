@@ -39,7 +39,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	if [ -f /etc/fedora-release ] || [ -f /etc/centos-release ]; then
 		echo "${cyan}Enabling RPM Fusion, Divested RPM, & replacing system Flathub with user Flathub...${coloroff}";
 		echo "${red}Please verify the RPM Fusion signing keys from here: https://rpmfusion.org/keys${coloroff}";
-		echo "Free - F33-40: ${yellow}E9A4 91A3 DE24 7814 E7E0 67EA E06F 8ECD D651 FF2E${coloroff}";
+		echo "Free - F33-41: ${yellow}E9A4 91A3 DE24 7814 E7E0 67EA E06F 8ECD D651 FF2E${coloroff}";
 		echo "Free - EL9: ${yellow}EDC0 0FE7 418C 9DF7 EF49  91A4 7403 EA33 2964 58F3${coloroff}";
 		echo "Free - EL8: ${yellow}8379 35CD 19E1 23AA 7F8A  8E69 979F 0C69 158B 3811${coloroff}";
 		echo "Free - EL7: ${yellow}DB9A 9A57 CAFD 23DA 3A88  792F 758B 3D18 F5CF 6C1E${coloroff}";
@@ -55,7 +55,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf install rpmfusion-free-release-tainted
 		dnf install rpmfusion-nonfree-release-tainted
 		dnf remove fedora-third-party fedora-workstation-repositories;
-		dnf config-manager --add-repo https://codeberg.org/divested/divested-release/raw/branch/master/divested-release.repo;
+		dnf config-manager addrepo --from-repofile='https://codeberg.org/divested/divested-release/raw/branch/master/divested-release.repo';
 		dnf update --refresh;
 		dnf remove fedora-flathub-remote;
 		flatpak remote-delete --system flathub;
@@ -212,7 +212,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		firecfg;
 	fi;
 
-	#PGP
+	#GPG
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Installing GnuPG...${coloroff}";
 		dnf install gnupg2 pinentry;
@@ -642,13 +642,14 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf install libheif libheif-freeworld --allowerasing;
 		dnf install gstreamer1-plugins-{bad-\*,good-\*,base} gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel;
 		dnf install lame\* --exclude=lame-devel;
-		dnf config-manager --set-enabled fedora-cisco-openh264;
+		dnf config-manager setopt fedora-cisco-openh264.enabled=1;
 		dnf update --refresh;
 		dnf install gstreamer1-plugin-openh264 mozilla-openh264;
 		flatpak --user install org.freedesktop.Platform.openh264;
 		dnf install install clinfo mesa-libOpenCL pocl;
 		dnf install mesa-dri-drivers mesa-va-drivers libva libva-utils;
 		dnf install vdpauinfo libvdpau libvdpau-va-gl libdvdcss;
+		dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU --allowerasing; # Required for ex. DaVinci Resolve
 	fi;
 
 	#Dependencies

@@ -52,7 +52,7 @@ if [ -f /etc/fedora-release ]; then
 					case $yn in
 							Yes )
 								echo "${red}Adding Brave's Repository...${coloroff}";
-								dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo;
+								dnf config-manager addrepo --id=brave-browser --set=name='Brave Browser' --set=baseurl='https://brave-browser-rpm-release.s3.brave.com/$basearch';
 								rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc;
 								echo "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
@@ -87,7 +87,7 @@ if [ -f /etc/fedora-release ]; then
 					case $yn in
 							Yes )
 								echo "${red}Adding Mullvad's Repository...${coloroff}";
-								dnf config-manager --add-repo https://repository.mullvad.net/rpm/stable/mullvad.repo;
+								dnf config-manager addrepo --from-repofile='https://repository.mullvad.net/rpm/stable/mullvad.repo';
 								echo "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
 								echo "${red}Installing Mullvad Browser...${coloroff}";
@@ -131,7 +131,7 @@ if [ -f /etc/fedora-release ]; then
 								echo "${red}Updating DNF Cache...${coloroff}";
 								dnf update;
 								echo "${red}Installing the "Development Tools" group...${coloroff}";
-								dnf group install --with-optional "Development Tools";
+								dnf group install development-tools --with-optional;
 								echo "${red}Updating Firejail...${coloroff}";
 								firecfg;
 								break;;
@@ -145,7 +145,7 @@ if [ -f /etc/fedora-release ]; then
 							Yes )
 								echo "${red}Updating DNF Cache...${coloroff}";
 								dnf update;
-								echo "${red}Installing the General Development Languages/Support/Dependencies...${coloroff}";
+								echo "${red}Installing General Development Languages/Support/Dependencies...${coloroff}";
 								dnf install install cargo cmake coreutils copr-rpmbuild fedpkg git-core make maven mercurial mock pacman perl proguard rpkg rpm-build rpmdevtools rpmlint ruby rust;
 								echo "${red}Updating Firejail...${coloroff}";
 								firecfg;
@@ -174,7 +174,7 @@ if [ -f /etc/fedora-release ]; then
 					case $yn in
 							Yes )
 								echo "${red}Adding VSCodium's Repository...${coloroff}";
-								dnf config-manager --add-repo https://slingshot.celenity.dev/vscodium.repo;
+								dnf config-manager addrepo --from-repofile='https://slingshot.celenity.dev/vscodium.repo';
 								echo "${red}Updating DNF cache...${coloroff}";
 								dnf update --refresh;
 								echo "${red}Installing VSCodium...${coloroff}";
@@ -262,7 +262,7 @@ if [ -f /etc/fedora-release ]; then
 								echo "${red}Updating DNF Cache...${coloroff}";
 								dnf update;
 								echo "${red}Installing the "Virtualization" group...${coloroff}";
-								dnf group install --with-optional "Virtualization";
+								dnf group install virtualization --with-optional;
 								echo "${red}Updating Firejail...${coloroff}";
 								firecfg;
 								break;;
@@ -389,7 +389,7 @@ if [ -f /etc/fedora-release ]; then
 								dnf remove qbittorrent;
 								echo "${red}Updating Flatpak Cache...${coloroff}";
 								flatpak update;
-								echo "${red}Installing Lollypop...${coloroff}";
+								echo "${red}Installing qBittorrent...${coloroff}";
 								flatpak --user install org.qbittorrent.qBittorrent;
 								echo "${red}Giving qBittorrent necessary permissions...${coloroff}";
 								flatpak --user override org.qbittorrent.qBittorrent --share=network;
@@ -584,7 +584,7 @@ if [ -f /etc/fedora-release ]; then
 					case $yn in
 							Yes )
 								echo "${red}Adding IVPN's Repository...${coloroff}";
-								dnf config-manager --add-repo https://repo.ivpn.net/stable/fedora/generic/ivpn.repo;
+								dnf config-manager addrepo --from-repofile='https://repo.ivpn.net/stable/fedora/generic/ivpn.repo';
 								echo "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
 								echo "${red}Installing IVPN...${coloroff}";
@@ -599,7 +599,7 @@ if [ -f /etc/fedora-release ]; then
 					case $yn in
 							Yes )
 								echo "${red}Adding Mullvad's Repository...${coloroff}";
-								dnf config-manager --add-repo https://repository.mullvad.net/rpm/stable/mullvad.repo;
+								dnf config-manager addrepo --from-repofile='https://repository.mullvad.net/rpm/stable/mullvad.repo';
 								echo "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
 								echo "${red}Installing Mullvad...${coloroff}";

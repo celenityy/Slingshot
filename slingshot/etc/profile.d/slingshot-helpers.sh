@@ -130,7 +130,7 @@ alias ssh-tor='torsocks --isolate ssh';
 alias dnf-update-security-testing="sudo dnf update --refresh --security --enablerepo=*updates-testing";
 alias dnf-update-kernel="sudo dnf update --enablerepo=*updates-testing kernel*"; #sometimes testing kernels aren't flagged as security updates
 
-alias update="sudo dnf update --refresh && sudo flatpak update && sudo fwupdmgr refresh --force && sudo fwupdmgr upgrade && sudo akmods --force";
+alias update="sudo dnf update --refresh && sudo flatpak update && flatpak update && sudo fwupdmgr refresh --force && sudo fwupdmgr upgrade && sudo akmods --force";
 alias envedit="nano ~/.bashrc";
 alias envup="source ~/.bashrc";
 alias slingshot-test="echo Roger that.";

@@ -7,7 +7,7 @@ if [ -f /etc/fedora-release ]; then
 fi;
 
 if [ -f /etc/fedora-release ]; then
-	dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo;
+	dnf config-manager addrepo --id=brave-browser --set=name='Brave Browser' --set=baseurl='https://brave-browser-rpm-release.s3.brave.com/$basearch';
 	rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc;
 	dnf update --refresh;
 	dnf install brave-browser;
