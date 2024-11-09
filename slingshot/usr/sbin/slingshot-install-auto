@@ -1,0 +1,187 @@
+#!/bin/bash
+
+coloroff='\e[0m';
+black='\e[0;30m';
+blue='\e[0;34m';
+cyan='\e[0;36m';
+green='\e[0;32m';
+purple='\e[0;35m';
+red='\e[0;31m';
+white='\e[0;37m';
+yellow='\e[0;33m';
+
+if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo -e "${red}ERROR: This script needs to be run as root!${coloroff}"; exit 1; fi;
+
+if [ -f /etc/fedora-release ]; then
+
+	echo "${red}Cleaning up DNF...${coloroff}";
+	dnf autoremove;
+	dnf clean all -y;
+
+	echo "${red}Updating DNF Cache...${coloroff}";
+	dnf update --refresh -y;
+
+	echo "${red}Adding DNF Repositories...${coloroff}";
+	dnf config-manager addrepo --id=brave-browser --set=name='Brave Browser' --set=baseurl='https://brave-browser-rpm-release.s3.brave.com/$basearch' -y;
+	rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc;
+	dnf copr enable secureblue/hardened-chromium -y;
+	dnf config-manager addrepo --from-repofile='https://repository.mullvad.net/rpm/stable/mullvad.repo' -y;
+	dnf config-manager addrepo --from-repofile='https://slingshot.celenity.dev/vscodium.repo' -y;
+	dnf copr enable nielsenb/android-udev-rules -y;
+	dnf config-manager addrepo --from-repofile='https://repo.ivpn.net/stable/fedora/generic/ivpn.repo' -y;
+
+	echo "${red}Updating DNF Cache...${coloroff}";
+	dnf update --refresh -y;
+
+	echo "${red}Updating Flatpak Cache...${coloroff}";
+	flatpak --system update -y;
+	flatpak --user update -y;
+
+	echo "${red}Updating Firejail...${coloroff}";
+	firecfg;
+	
+	echo "${red}Installing Brave...${coloroff}";
+	dnf install brave-browser -y;
+
+	echo "${red}Installing Hardened Chromium...${coloroff}";
+	dnf install hardened-chromium -y;
+
+	echo "${red}Installing Mullvad Browser...${coloroff}";
+	dnf install mullvad-browser -y;
+
+	echo "${red}Installing Tor Browser...${coloroff}";
+	dnf install tor torbrowser-launcher -y;
+
+	echo "Installing Fedora's Recommended Developer Tools...";
+	echo "${red}Installing the "Development Tools" group...${coloroff}";
+	dnf group install development-tools --with-optional -y;
+
+	echo "${red}Installing General Development Languages/Support/Dependencies...${coloroff}";
+	dnf install cargo cmake coreutils copr-rpmbuild fedpkg git-core make maven mercurial mock pacman perl proguard rpkg rpm-build rpmdevtools rpmlint ruby rust;
+	
+	echo "${red}Installing nano...${coloroff}";
+	dnf install nano -y;
+
+	echo "${red}Installing VSCodium...${coloroff}";
+	dnf install codium -y;
+
+	echo "${red}Installing ADB...${coloroff}";
+	dnf install android-tools -y;
+
+	echo "${red}Installing android-udev-rules...${coloroff}";
+	dnf install android-udev-rules -y;
+
+	echo "Installing Android Studio...";
+	echo "${red}Installing Android Studio...${coloroff}";
+	flatpak --user install com.google.AndroidStudio -y;
+	echo "${red}Giving Android Studio necessary permissions...${coloroff}";
+	flatpak --user override com.google.AndroidStudio --device=dri --device=kvm --share=network -y;
+
+	echo "${red}Installing enjarify...${coloroff}";
+	dnf install enjarify -y;
+
+	echo "Installing Fedora's Recommended Virtualization Software...";
+	echo "${red}Installing the "Virtualization" group...${coloroff}";
+	dnf group install virtualization --with-optional -y;
+
+	echo "${red}Installing Signal...${coloroff}";
+	flatpak --user install org.signal.Signal -y;
+	echo "${red}Giving Signal necessary permissions...${coloroff}";
+	flatpak --user override org.signal.Signal --share=network --socket=pulseaudio -y;
+	echo "${red}Enabling Wayland Support...${coloroff}";
+	flatpak --user override org.signal.Signal --env=ELECTRON_OZONE_PLATFORM_HINT=auto -y;
+
+	echo "${red}Installing VLC...${coloroff}";
+	flatpak --user install org.videolan.VLC org.videolan.VLC.Plugin.pause_click org.videolan.VLC.Plugin.fdkaac org.videolan.VLC.Plugin.bdj org.videolan.VLC.Plugin.makemkv -y;
+	echo "${red}Giving VLC necessary permissions...${coloroff}";
+	flatpak --user override org.videolan.VLC --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11 -y;
+				
+	echo "${red}Installing qBittorrent...${coloroff}";
+	flatpak --user install org.qbittorrent.qBittorrent -y;
+	echo "${red}Giving qBittorrent necessary permissions...${coloroff}";
+	flatpak --user override org.qbittorrent.qBittorrent --share=network -y;
+
+	echo "${red}Installing Lollypop...${coloroff}";
+	flatpak --user install org.gnome.Lollypop -y;
+
+	echo "${red}Installing yt-dlp...${coloroff}";
+	dnf install yt-dlp -y;
+
+	echo "${red}Installing Audacity...${coloroff}";
+	flatpak --user install org.audacityteam.Audacity -y;
+	echo "${red}Giving Audacity necessary permissions...${coloroff}";
+	flatpak --user override org.audacityteam.Audacity --socket=pulseaudio -y;
+
+	echo "${red}Installing OBS...${coloroff}";
+	flatpak --user install com.obsproject.Studio com.obsproject.Studio.Plugin.InputOverlay com.obsproject.Studio.Plugin.Gstreamer com.obsproject.Studio.Plugin.GStreamerVaapi com.obsproject.Studio.Plugin.CompositeBlur com.obsproject.Studio.Plugin.BackgroundRemoval -y;
+	echo "${red}Giving OBS necessary permissions...${coloroff}";
+	flatpak --user override com.obsproject.Studio --device=dri --socket=pulseaudio -y;
+
+	echo "${red}Installing IVPN...${coloroff}";
+	dnf install ivpn ivpn-ui -y;
+
+	echo "Install MakeMKV?";
+		select yn in "Yes" "No"; do
+			case $yn in
+					Yes )
+						echo "${red}Installing MakeMKV...${coloroff}";
+						flatpak --user install com.makemkv.MakeMKV -y;
+						echo "${red}Giving MakeMKV necessary permissions...${coloroff}";
+						flatpak --user override com.makemkv.MakeMKV --share=network -y;
+						break;;
+					No )
+						break;;
+				esac
+			done
+
+	echo "Install Prism Launcher? (Minecraft)";
+		select yn in "Yes" "No"; do
+			case $yn in
+					Yes )
+						echo "${red}Installing Prism Launcher...${coloroff}";
+						flatpak --user install org.prismlauncher.PrismLauncher -y;
+						echo "${red}Giving Prism Launcher necessary permissions...${coloroff}";
+						flatpak --user override org.prismlauncher.PrismLauncher --device=dri --share=network --socket=pulseaudio -y;
+						break;;
+					No )
+						break;;
+				esac
+			done
+
+	echo "Install Steam?";
+		select yn in "Yes" "No"; do
+			case $yn in
+					Yes )
+						echo "${red}Installing Steam...${coloroff}";
+						flatpak --user install com.valvesoftware.Steam com.valvesoftware.Steam.Utility.steamtinkerlaunch com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.valvesoftware.Steam.Utility.InhibitScreensaver -y;
+						echo "${red}Giving Steam necessary permissions...${coloroff}";
+						flatpak --user override com.valvesoftware.Steam --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11 -y;
+						echo "${red}Disabling hardened_malloc for Steam (Causes it to break)...${coloroff}";
+						flatpak --user override com.valvesoftware.Steam --nofilesystem=host-os --unset-env=LD_PRELOAD -y;
+						echo "${red}Installing WINE...${coloroff}";
+						dnf install wine -y;
+						echo "${red}Installing ProtonUp-Qt... (Allows easily installing, updating, & managing Proton, Proton-GE, & Wine)${coloroff}";
+						flatpak --user install net.davidotek.pupgui2 -y;
+						echo "${red}Giving ProtonUp-Qt necessary permissions...${coloroff}";
+						flatpak --user override net.davidotek.pupgui2 --share=network -y;
+						break;;
+					No )
+						break;;
+				esac
+			done
+
+	echo "${red}Cleaning up DNF...${coloroff}";
+	dnf autoremove;
+	dnf clean all -y;
+
+	echo "${red}Updating DNF Cache...${coloroff}";
+	dnf update --refresh -y;
+
+	echo "${red}Updating Flatpak Cache...${coloroff}";
+	flatpak --system update -y;
+	flatpak --user update -y;
+
+	echo "${red}Updating Firejail...${coloroff}";
+	firecfg;
+
+fi;

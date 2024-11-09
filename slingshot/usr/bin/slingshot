@@ -50,19 +50,40 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
+
+		echo "${red}Cleaning up DNF...${coloroff}";
+		dnf autoremove;
+		dnf clean all;
+
+		echo "${red}Updating DNF Cache...${coloroff}";
+		dnf update --refresh;
+
+		dnf remove fedora-third-party fedora-workstation-repositories;
 		dnf install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm";
 		dnf install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm";
-		dnf install rpmfusion-free-release-tainted
-		dnf install rpmfusion-nonfree-release-tainted
-		dnf remove fedora-third-party fedora-workstation-repositories;
+		dnf install rpmfusion-free-release-tainted;
+		dnf install rpmfusion-nonfree-release-tainted;
 		dnf config-manager addrepo --from-repofile='https://codeberg.org/divested/divested-release/raw/branch/master/divested-release.repo';
-		dnf update --refresh;
 		dnf remove fedora-flathub-remote;
+
+		echo "${red}Updating DNF Cache...${coloroff}";
+		dnf update --refresh;
+
+		echo "${red}Updating Flatpak Cache...${coloroff}";
+		flatpak --system update;
+		flatpak --user update;
+
 		flatpak remote-delete --system flathub;
 		flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo;
-		flatpak update;
-		dnf update @core;
+
+		echo "${red}Updating Flatpak Cache...${coloroff}";
+		flatpak --system update;
+		flatpak --user update;
+
+		echo "${red}Cleaning up DNF...${coloroff}";
 		dnf autoremove;
+		dnf clean all;
+
 	elif [ -f /etc/centos-release ]; then
 		yum install epel-release;
 		yum localinstall --nogpgcheck "https://download1.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %centos).noarch.rpm";
@@ -73,14 +94,14 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		echo "${cyan}Setting DNF repos to use HTTPS...${coloroff}";
 		sed -i 's/metalink?repo=/metalink\?protocol\=https\&repo\=/' /etc/yum.repos.d/*.repo;
 
+		echo "Remember: This will need to be done again if any of them are updated!";
+
 		echo "${cyan}Disabling DNF countme...${coloroff}";
 		sed -i 's/countme=1/countme=0/' /etc/yum.repos.d/*.repo;
 		sed -i '$a countme=False' /etc/dnf/dnf.conf;
 
 		echo "Speeding up DNF...";
 		sed -i '$a max_parallel_downloads=10' /etc/dnf/dnf.conf;
-		
-		echo "Remember: This will need to be done again if any of them are updated!";
 	fi
 
 	#FWUPD
@@ -88,6 +109,9 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		echo "${cyan}Setting FWUPD to use HTTPS...${coloroff}":
 		echo 'UriSchemes=file;https' | tee -a /etc/fwupd/fwupd.conf;
 		systemctl restart fwupd;
+		echo "Updating FWUPD...";
+		fwupdmgr refresh --force;
+		fwupdmgr upgrade;
 	fi
 
 	#Stealth Firewall
@@ -185,10 +209,12 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 					break;;
 			esac
 		done
-		echo "${cyan}Installing Flatseal...${coloroff}";
-		flatpak --user install com.github.tchx84.Flatseal;
-		flatpak --user override com.github.tchx84.Flatseal --filesystem=/var/lib/flatpak/app:ro --filesystem=xdg-data/flatpak/app:ro --filesystem=xdg-data/flatpak/overrides:create;
 	fi;
+
+	#Flatseal
+	echo "${cyan}Installing Flatseal...${coloroff}";
+	flatpak --user install com.github.tchx84.Flatseal;
+	flatpak --user override com.github.tchx84.Flatseal --filesystem=/var/lib/flatpak/app:ro --filesystem=xdg-data/flatpak/app:ro --filesystem=xdg-data/flatpak/overrides:create;
 
 	#hardened_malloc
 	if [ -f /etc/fedora-release ]; then
@@ -558,39 +584,11 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to replace GNOME Logs with the Flatpak (Recommended)?";
-		select yn in "Yes" "No"; do
-			case $yn in
-				Yes )
-					dnf remove gnome-logs;
-					flatpak --user install org.gnome.Logs;
-					break;;
-				No )
-					break;;
-			esac
-		done
-	fi;
-
-	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to replace GNOME Text Editor with the Flatpak (Recommended)?";
-		select yn in "Yes" "No"; do
-			case $yn in
-				Yes )
-					dnf remove gnome-text-editor;
-					flatpak --user install org.gnome.TextEditor;
-					break;;
-				No )
-					break;;
-			esac
-		done
-	fi;
-
-	if [ -f /etc/fedora-release ]; then
 		echo "Would you like to replace GNOME Image Viewer with the Flatpak (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
-					dnf remove loupse;
+					dnf remove loupe;
 					flatpak --user install org.gnome.Loupe;
 					break;;
 				No )
@@ -614,7 +612,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		done
 	fi;
 
-		if [ -f /etc/fedora-release ]; then
+	if [ -f /etc/fedora-release ]; then
 		echo "Would you like to replace LibreOffice with the Flatpak (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
@@ -631,11 +629,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	#Codecs
 	if [ -f /etc/fedora-release ]; then
 		echo "Installing codecs...";
-		dnf update --refresh;
 		dnf group install multimedia --with-optional --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin;
-		dnf update --refresh;
-		dnf group install sound-and-video
-		dnf update --refresh;
+		dnf group install sound-and-video;
 		dnf swap ffmpeg-free ffmpeg --allowerasing;
 		dnf swap fdk-aac-free fdk-aac --allowerasing;
 		dnf swap libavcodec libavcodec-freeworld --allowerasing;
@@ -655,7 +650,6 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	#Dependencies
 	if [ -f /etc/fedora-release ]; then
 		echo "Installing various important dependencies...";
-		dnf update --refresh;
 		dnf install python3 python3-devel;
 		dnf install kernel-devel kernel-headers;
 		dnf install gcc glibc glibc-devel glibc-headers;
@@ -691,8 +685,18 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#Clean-up
 	if [ -f /etc/fedora-release ]; then
-		update;
+		echo "${red}Cleaning up DNF...${coloroff}";
 		dnf autoremove;
+		dnf clean all;
+
+		echo "${red}Updating DNF Cache...${coloroff}";
+		dnf update --refresh;
+
+		echo "${red}Updating Flatpak Cache...${coloroff}";
+		flatpak --system update;
+		flatpak --user update;
+
+		echo "${red}Updating Firejail...${coloroff}";
 		firecfg;
 	fi;
 
