@@ -7,7 +7,6 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 %define _binary_payload w3T.xzdio
 %define _sourcedir %(echo $PWD)
-%define _rpmdir %(echo $PWD/build)
 
 %description
 Welcome to the real world.
