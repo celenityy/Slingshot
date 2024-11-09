@@ -32,15 +32,29 @@ export GLIBC_TUNABLES='glibc.malloc.tcache_count=0';
 # enable wayland for firefox
 export MOZ_ENABLE_WAYLAND=1;
 
-# enable wayland for signal & likely other electron apps
+# enable wayland for electron apps
 export ELECTRON_OZONE_PLATFORM_HINT='auto';
 
 # gpg
 export GPG_TTY=$(tty);
 
 # disable JIT
-export JavaScriptCoreUseJIT=0;
 export GJS_DISABLE_JIT=1;
+export JavaScriptCoreUseJIT=0;
+
+# disable telemetry for various programs
+# https://consoledonottrack.com/
+export DO_NOT_TRACK=1;
+export AZURE_CORE_COLLECT_TELEMETRY=0;
+export DOTNET_CLI_TELEMETRY_OPTOUT=1;
+export GATSBY_TELEMETRY_DISABLED=1;
+export HOMEBREW_NO_ANALYTICS=1;
+export POWERSHELL_TELEMETRY_OPTOUT=1;
+export SAM_CLI_TELEMETRY=0;
+
+# harden homebrew (if installed)
+export HOMEBREW_NO_INSECURE_REDIRECT=1;
+export HOMEBREW_NO_ENV_HINTS=1;
 
 # set restrictive umask
 if [ "$(/usr/bin/id -ru)" -ge 1000 ] && [ "$(/usr/bin/id -u)" -ge 1000 ] && [ "$(/usr/bin/id -gn)" = "$(/usr/bin/id -un)" ]; then
