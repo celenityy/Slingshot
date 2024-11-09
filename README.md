@@ -10,7 +10,7 @@ Compatibility
 - Arch Linux
 - CentOS 9/Stream
 - Debian 12
-- Fedora 39/40 (preferred)
+- Fedora 41 (preferred)
 - openSUSE Tumbleweed
 
 License
