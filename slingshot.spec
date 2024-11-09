@@ -8,7 +8,7 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 %define _binary_payload w3T.xzdio
 %define _sourcedir %(echo $PWD)
-%define _rpmdir %(echo $PWD)
+%define _rpmdir %(echo $PWD/build)
 
 %description
 Welcome to the real world.
@@ -128,6 +128,7 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/sbin/slingshot-android
 /usr/sbin/slingshot-brave
 /usr/sbin/brace-update-system
+/usr/sbin/slingshot-installer
 /usr/sbin/brace-rpm-verify
 /usr/share/doc/slingshot/README.md
 
