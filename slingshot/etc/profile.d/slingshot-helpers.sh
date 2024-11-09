@@ -127,7 +127,7 @@ alias rootkitscanalt='sudo unhide reverse procall sys';
 
 # misc
 alias ssh-tor='torsocks --isolate ssh';
-alias dnf-update-security-testing="sudo dnf update --refresh --security --secseverity=Low --enablerepo=*updates-testing";
+alias dnf-update-security-testing="sudo dnf update --refresh --security --enablerepo=*updates-testing";
 alias dnf-update-kernel="sudo dnf update --enablerepo=*updates-testing kernel*"; #sometimes testing kernels aren't flagged as security updates
 
 alias update="sudo dnf update --refresh && sudo flatpak update && sudo fwupdmgr refresh --force && sudo fwupdmgr upgrade && sudo akmods --force";
