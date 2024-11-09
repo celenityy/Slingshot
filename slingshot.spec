@@ -1,6 +1,6 @@
 Name: slingshot
 Version: 20241109
-Release: 1{?dist}
+Release: 1%{?dist}
 Summary: Create the ultimate Linux set-up.
 License: AGPLv3+
 URL: https://slingshot.celenity.dev
@@ -75,7 +75,6 @@ install -Dm755 %{_sourcedir}/slingshot/usr/sbin/slingshot-fedora-repos %{buildro
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/slingshot-android %{buildroot}/usr/sbin/slingshot-android;
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/slingshot-brave %{buildroot}/usr/sbin/slingshot-brave;
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/brace-fedora-update-system %{buildroot}/usr/sbin/brace-update-system;
-install -Dm755 %{_sourcedir}/slingshot/usr/sbin/slingshot-installer %{buildroot}/usr/sbin/slingshot-installer;
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/brace-rpm-verify %{buildroot}/usr/sbin/brace-rpm-verify;
 mkdir -p %{buildroot}/usr/share/doc/slingshot;
 install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/README.md;
@@ -129,7 +128,6 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/sbin/slingshot-android
 /usr/sbin/slingshot-brave
 /usr/sbin/brace-update-system
-/usr/sbin/slingshot-installer
 /usr/sbin/brace-rpm-verify
 /usr/share/doc/slingshot/README.md
 

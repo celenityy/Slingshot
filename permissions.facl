@@ -558,11 +558,6 @@ user::rwx
 group::r-x
 other::r-x
 
-# file: slingshot/usr/sbin/slingshot-installer
-user::rwx
-group::r-x
-other::r-x
-
 # file: slingshot/usr/sbin/brace-rpm-verify
 user::rwx
 group::r-x
