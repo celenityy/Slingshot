@@ -1,8 +1,9 @@
 Name: slingshot
 Version: 20241109
-Release: 1
+Release: 1{?dist}
 Summary: Create the ultimate Linux set-up.
 License: AGPLv3+
+URL: https://slingshot.celenity.dev
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 %define _binary_payload w3T.xzdio
@@ -131,3 +132,7 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/sbin/slingshot-installer
 /usr/sbin/brace-rpm-verify
 /usr/share/doc/slingshot/README.md
+
+%changelog
+* Saturday November 9 celenity <celenity@celenity.dev> - 20241109-1
+- Initial Release
