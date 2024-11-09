@@ -1,5 +1,5 @@
-Name: Slingshot
-Version: 20241011
+Name: slingshot
+Version: 20241109
 Release: 1
 Summary: Create the ultimate Linux set-up.
 License: AGPLv3+
