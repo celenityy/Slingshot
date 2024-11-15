@@ -68,6 +68,7 @@ install -Dm644 %{_sourcedir}/slingshot/usr/lib/tmpfiles.d/99-brace-proc.conf %{b
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/tmpfiles.d/99-slingshot-sys.conf %{buildroot}/usr/lib/tmpfiles.d/99-slingshot-sys.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/udev/rules.d/50-usb-realtek-net-exceprt.rules %{buildroot}/usr/lib/udev/rules.d/50-usb-realtek-net-exceprt.rules;
 install -Dm755 %{_sourcedir}/slingshot/usr/bin/slingshot %{buildroot}/usr/bin/slingshot;
+install -Dm755 %{_sourcedir}/slingshot/usr/bin/slingshot-auto %{buildroot}/usr/bin/slingshot-auto;
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/brace-audit %{buildroot}/usr/sbin/brace-audit;
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/brace-fedora-enable-auto-updates %{buildroot}/usr/sbin/brace-enable-auto-updates;
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/brace-fedora-enable-fapolicyd %{buildroot}/usr/sbin/brace-enable-fapolicyd;
@@ -76,6 +77,8 @@ install -Dm755 %{_sourcedir}/slingshot/usr/sbin/slingshot-android %{buildroot}/u
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/slingshot-brave %{buildroot}/usr/sbin/slingshot-brave;
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/brace-fedora-update-system %{buildroot}/usr/sbin/brace-update-system;
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/brace-rpm-verify %{buildroot}/usr/sbin/brace-rpm-verify;
+install -Dm755 %{_sourcedir}/slingshot/usr/sbin/slingshot-install %{buildroot}/usr/sbin/slingshot-install;
+install -Dm755 %{_sourcedir}/slingshot/usr/sbin/slingshot-install-auto %{buildroot}/usr/sbin/slingshot-install-auto;
 mkdir -p %{buildroot}/usr/share/doc/slingshot;
 install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/README.md;
 
@@ -121,6 +124,7 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/lib/tmpfiles.d/99-slingshot-sys.conf
 /usr/lib/udev/rules.d/50-usb-realtek-net-exceprt.rules
 /usr/bin/slingshot
+/usr/bin/slingshot-auto
 /usr/sbin/brace-audit
 /usr/sbin/brace-enable-auto-updates
 /usr/sbin/brace-enable-fapolicyd
@@ -128,8 +132,9 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/sbin/slingshot-android
 /usr/sbin/slingshot-brave
 /usr/sbin/brace-update-system
-/usr/sbin/slingshot-installer
 /usr/sbin/brace-rpm-verify
+/usr/sbin/slingshot-install
+/usr/sbin/slingshot-install-auto
 /usr/share/doc/slingshot/README.md
 
 %changelog
