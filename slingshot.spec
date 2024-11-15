@@ -1,5 +1,5 @@
 Name: slingshot
-Version: 20241109
+Version: 20241115
 Release: 1%{?dist}
 Summary: Create the ultimate Linux set-up.
 License: AGPLv3+
@@ -66,6 +66,7 @@ install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/user/restic-backup@.servi
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/user/restic-backup@.timer %{buildroot}/usr/lib/systemd/user/restic-backup@.timer;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/tmpfiles.d/99-brace-proc.conf %{buildroot}/usr/lib/tmpfiles.d/99-brace-proc.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/tmpfiles.d/99-slingshot-sys.conf %{buildroot}/usr/lib/tmpfiles.d/99-slingshot-sys.conf;
+install -Dm644 %{_sourcedir}/brace/usr/lib/udev/rules.d/10-trim.rules %{buildroot}/usr/lib/udev/rules.d/10-trim.rules;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/udev/rules.d/50-usb-realtek-net-exceprt.rules %{buildroot}/usr/lib/udev/rules.d/50-usb-realtek-net-exceprt.rules;
 install -Dm755 %{_sourcedir}/slingshot/usr/bin/slingshot %{buildroot}/usr/bin/slingshot;
 install -Dm755 %{_sourcedir}/slingshot/usr/bin/slingshot-auto %{buildroot}/usr/bin/slingshot-auto;
