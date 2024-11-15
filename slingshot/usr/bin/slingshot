@@ -63,7 +63,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm";
 		dnf install rpmfusion-free-release-tainted;
 		dnf install rpmfusion-nonfree-release-tainted;
-		dnf config-manager addrepo --from-repofile='https://codeberg.org/divested/divested-release/raw/branch/master/divested-release.repo';
+		wget https://gitlab.com/divested/divested-release/-/jobs/7046900191/artifacts/raw/build/noarch/divested-release-20240607-1.noarch.rpm;
+		dnf install divested-release-20240607-1.noarch.rpm;
 		dnf remove fedora-flathub-remote;
 
 		echo "${red}Updating DNF Cache...${coloroff}";
@@ -73,6 +74,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		flatpak --system update;
 		flatpak --user update;
 
+		flatpak remote-delete --system fedora;
 		flatpak remote-delete --system flathub;
 		flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo;
 
@@ -112,18 +114,6 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		echo "Updating FWUPD...";
 		fwupdmgr refresh --force;
 		fwupdmgr upgrade;
-	fi
-
-	#Stealth Firewall
-	if [ -x /usr/bin/firewall-cmd ]; then
-		echo "${cyan}Hardening Firewall...${coloroff}";
-		firewall-cmd --set-default-zone=drop;
-		#firewall-cmd --add-protocol=icmp --permanent;
-		firewall-cmd --add-protocol=ipv6-icmp --permanent;
-		firewall-cmd --add-service=dhcpv6-client --permanent;
-		firewall-cmd --reload;
-		firewall-cmd --lockdown-on;
-		dnf install firewall-config;
 	fi
 
 	#Kernel Command Line
@@ -179,38 +169,14 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	if [ -x /usr/bin/update-crypto-policies ]; then
 		echo "${cyan}Hardening crypto policies...${coloroff}";
 		update-crypto-policies --set NEXT;
-	fi;
+	fi
 
 	#nullok https://networklogician.com/2021/04/11/disable-null-passwords/
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Disabling null/empty passwords...${coloroff}";
 		/usr/bin/sed -i 's/\s+nullok//g' /etc/pam.d/system-auth;
-	fi;
-
-	#Hostname
-	if [ -x /usr/bin/hostnamectl ]; then
-		echo "${cyan}Setting generic hostname...${coloroff}";
-		nmcli general reload conf;
-		hostnamectl set-hostname "localhost";
-		hostnamectl --transient hostname '';
-		nmcli general reload conf;
-	fi;
-
-	#Flatpak Hardening
-	if [ -x /usr/bin/flatpak ]; then
-		echo "${red}Do you want to harden your Flatpaks (Recommended)?${coloroff}";
-		select yn in "Yes" "No"; do
-			case $yn in
-				Yes )
-					flatpak override --system --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions;
-					flatpak override --user --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions;
-					break;;
-				No )
-					break;;
-			esac
-		done
-	fi;
-
+	fi
+	
 	#Flatseal
 	echo "${cyan}Installing Flatseal...${coloroff}";
 	flatpak --user install com.github.tchx84.Flatseal;
@@ -222,33 +188,48 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf install hardened_malloc;
 		flatpak override --system --filesystem=host-os:ro --env=LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so;
 		flatpak override --user --filesystem=host-os:ro --env=LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so;
-	fi;
+	fi
 
 	#ClamAV
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Installing ClamAV...${coloroff}";
 		dnf install clamav clamav-freshclam;
 		freshclam;
-	fi;
+	fi
+
+	if [ -f /etc/fedora-release ]; then
+		echo "${cyan}Installing firewall-config...${coloroff}";
+		dnf install firewall-config;
+	fi
 
 	#Firejail
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Installing Firejail...${coloroff}";
 		dnf install firejail;
 		firecfg;
-	fi;
+	fi
 
 	#GPG
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Installing GnuPG...${coloroff}";
 		dnf install gnupg2 pinentry;
-	fi;
+	fi
 
 	#real-ucode
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Installing latest microcodes...${coloroff}";
 		dnf install real-ucode;
-	fi;
+	fi
+
+	#Dependencies
+	if [ -f /etc/fedora-release ]; then
+		echo "Installing various important dependencies...";
+		dnf install python3 python3-devel;
+		dnf install kernel-devel kernel-headers;
+		dnf install gcc glibc glibc-devel glibc-headers;
+		dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU;
+		dnf install java-1.8.0-openjdk java-1.8.0-openjdk-devel java-11-openjdk java-11-openjdk-devel java-17-openjdk java-17-openjdk-devel java-21-openjdk java-21-openjdk-devel eclipse-jdt proguard;
+	fi
 
 	#Services
 	if [ -x /usr/bin/systemctl ]; then
@@ -275,8 +256,98 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		echo "Debloating...";
 		echo "${yellow}This may take a moment....${coloroff}";
 		dnf remove abrt dos2unix evince fedora-bookmarks fedora-chromium-config gnome-connections gnome-remote-desktop gnome-tour gvfs-smb ibus-typing-booster kpartx realmd samba-client sos 'sssd*' texlive-libs totem yelp;
+	fi
+
+		#HARMFUL PACKAGES
+	if [ -f /etc/fedora-release ]; then
+		echo "Removing dangerous/harmful packages...";
+		echo "";
+		dnf install remove-retired-packages;
+		remove-retired-packages;
+		echo "ClamTK: No longer maintained https://github.com/dave-theunsub/clamtk/issues/163";
+		dnf remove clamtk;
+		flatpak uninstall --system com.gitlab.davem.ClamTk;
+		flatpak uninstall --user com.gitlab.davem.ClamTk;
+		echo "Filezilla: Adware/Spying https://wikipedia.org/wiki/FileZilla#Bundled_adware_issues";
+		dnf remove filezilla;
+		flatpak uninstall --system org.filezillaproject.Filezilla;
+		flatpak uninstall --user org.filezillaproject.Filezilla;
+		echo "Google Chrome: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
+		dnf remove google-chrome;
+		flatpak uninstall --system com.google.chrome com.google.ChromeDev;
+		flatpak uninstall --user com.google.chrome com.google.ChromeDev;
+		echo "Chromium: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
+		dnf remove chromium;
+		flatpak uninstall --system org.chromium.Chromium;
+		flatpak uninstall --user org.chromium.Chromium;
+		echo "Microsoft Edge: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
+		dnf remove microsoft-edge-stable;
+		flatpak uninstall --system com.microsoft.Edge com.microsoft.EdgeDev;
+		flatpak uninstall --user com.microsoft.Edge com.microsoft.EdgeDev;
+		echo "Opera: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
+		flatpak uninstall --system com.opera.Opera;
+		flatpak uninstall --user com.opera.Opera;
+		echo "Discord: Spyware, just use within your browser if you NEED to...";
+		dnf remove discord;
+		flatpak uninstall --system com.discordapp.Discord;
+		flatpak uninstall --user com.discordapp.Discord;
+	fi
+
+	#Flatpak Hardening
+	if [ -x /usr/bin/flatpak ]; then
+		echo "${red}Do you want to harden your Flatpaks (Recommended)?${coloroff}";
+		echo "NOTE: You will likely need to set overrides for apps as needed via Flatseal or your DE if supported (Ex. KDE)";
+		select yn in "Yes" "No"; do
+			case $yn in
+				Yes )
+					flatpak override --system --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions;
+					flatpak override --user --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions;
+					break;;
+				No )
+					break;;
+			esac
+		done
 	fi;
 
+	#Stealth Firewall
+	if [ -x /usr/bin/firewall-cmd ]; then
+		echo "${red}Do you want to harden your Firewall (Recommended)?${coloroff}";
+		echo "NOTE: This will block incoming connections and isn't recommended for server environments";
+		select yn in "Yes" "No"; do
+			case $yn in
+				Yes )
+					echo "${cyan}Hardening Firewall...${coloroff}";
+					firewall-cmd --set-default-zone=drop;
+					#firewall-cmd --add-protocol=icmp --permanent;
+					firewall-cmd --add-protocol=ipv6-icmp --permanent;
+					firewall-cmd --add-service=dhcpv6-client --permanent;
+					firewall-cmd --reload;
+					firewall-cmd --lockdown-on;
+					break;;
+				No )
+					break;;
+			esac
+		done
+	fi;
+
+	#Hostname
+	if [ -x /usr/bin/hostnamectl ]; then
+		echo "${red}Would you like to set a generic hostname? (Recommended, especially for mobile devices)?${coloroff}";
+		case $yn in
+				Yes )
+					echo "${cyan}Setting generic hostname...${coloroff}";
+					nmcli general reload conf;
+					hostnamectl set-hostname "localhost";
+					hostnamectl --transient hostname '';
+					nmcli general reload conf;
+					break;;
+				No )
+					break;;
+			esac
+		done					
+	fi
+
+	# More Debloating
 	if [ -f /etc/fedora-release ]; then
 		echo "${blue}Would you like to remove GNOME Calendar?${coloroff}";
 		select yn in "Yes" "No"; do
@@ -464,54 +535,6 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		done
 	fi;
 
-	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to remove the Text-to-Speech Synthesizer?";
-		select yn in "Yes" "No"; do
-			case $yn in
-				Yes )
-					dnf remove '*speech*';
-					break;;
-				No )
-					break;;
-			esac
-		done
-	fi;
-
-	#HARMFUL PACKAGES
-	if [ -f /etc/fedora-release ]; then
-		echo "Removing dangerous/harmful packages...";
-		echo "";
-		dnf install remove-retired-packages;
-		remove-retired-packages;
-		echo "ClamTK: No longer maintained https://github.com/dave-theunsub/clamtk/issues/163";
-		dnf remove clamtk;
-		flatpak uninstall --system com.gitlab.davem.ClamTk;
-		flatpak uninstall --user com.gitlab.davem.ClamTk;
-		echo "Filezilla: Adware/Spying https://wikipedia.org/wiki/FileZilla#Bundled_adware_issues";
-		dnf remove filezilla;
-		flatpak uninstall --system org.filezillaproject.Filezilla;
-		flatpak uninstall --user org.filezillaproject.Filezilla;
-		echo "Google Chrome: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		dnf remove google-chrome;
-		flatpak uninstall --system com.google.chrome com.google.ChromeDev;
-		flatpak uninstall --user com.google.chrome com.google.ChromeDev;
-		echo "Chromium: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		dnf remove chromium;
-		flatpak uninstall --system org.chromium.Chromium;
-		flatpak uninstall --user org.chromium.Chromium;
-		echo "Microsoft Edge: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		dnf remove microsoft-edge-stable;
-		flatpak uninstall --system com.microsoft.Edge com.microsoft.EdgeDev;
-		flatpak uninstall --user com.microsoft.Edge com.microsoft.EdgeDev;
-		echo "Opera: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		flatpak uninstall --system com.opera.Opera;
-		flatpak uninstall --user com.opera.Opera;
-		echo "Discord: Spyware, just use within your browser if you NEED to...";
-		dnf remove discord;
-		flatpak uninstall --system com.discordapp.Discord;
-		flatpak uninstall --user com.discordapp.Discord;
-	fi;
-
 	# Replacing built-in apps with Flatpaks
 	if [ -f /etc/fedora-release ]; then
 		echo "Would you like to replace GNOME Calculator with the Flatpak (Recommended)?";
@@ -628,33 +651,32 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#Codecs
 	if [ -f /etc/fedora-release ]; then
-		echo "Installing codecs...";
-		dnf group install multimedia --with-optional --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin;
-		dnf group install sound-and-video;
-		dnf swap ffmpeg-free ffmpeg --allowerasing;
-		dnf swap fdk-aac-free fdk-aac --allowerasing;
-		dnf swap libavcodec libavcodec-freeworld --allowerasing;
-		dnf install libheif libheif-freeworld --allowerasing;
-		dnf install gstreamer1-plugins-{bad-\*,good-\*,base} gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel;
-		dnf install lame\* --exclude=lame-devel;
-		dnf config-manager setopt fedora-cisco-openh264.enabled=1;
-		dnf update --refresh;
-		dnf install gstreamer1-plugin-openh264 mozilla-openh264;
-		flatpak --user install org.freedesktop.Platform.openh264;
-		dnf install install clinfo mesa-libOpenCL pocl;
-		dnf install mesa-dri-drivers mesa-va-drivers libva libva-utils;
-		dnf install vdpauinfo libvdpau libvdpau-va-gl libdvdcss;
-		dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU --allowerasing; # Required for ex. DaVinci Resolve
-	fi;
-
-	#Dependencies
-	if [ -f /etc/fedora-release ]; then
-		echo "Installing various important dependencies...";
-		dnf install python3 python3-devel;
-		dnf install kernel-devel kernel-headers;
-		dnf install gcc glibc glibc-devel glibc-headers;
-		dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU;
-		dnf install java-1.8.0-openjdk java-1.8.0-openjdk-devel java-11-openjdk java-11-openjdk-devel java-17-openjdk java-17-openjdk-devel java-21-openjdk java-21-openjdk-devel eclipse-jdt proguard;
+		echo "Would you like to install codecs for media playback? (Recommended)?";
+		select yn in "Yes" "No"; do
+			case $yn in
+				Yes )
+					echo "Installing codecs...";
+					dnf group install multimedia --with-optional --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin;
+					dnf group install sound-and-video;
+					dnf swap ffmpeg-free ffmpeg --allowerasing;
+					dnf swap fdk-aac-free fdk-aac --allowerasing;
+					dnf swap libavcodec libavcodec-freeworld --allowerasing;
+					dnf install libheif libheif-freeworld --allowerasing;
+					dnf install gstreamer1-plugins-{bad-\*,good-\*,base} gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel;
+					dnf install lame\* --exclude=lame-devel;
+					dnf config-manager setopt fedora-cisco-openh264.enabled=1;
+					dnf update --refresh;
+					dnf install gstreamer1-plugin-openh264 mozilla-openh264;
+					flatpak --user install org.freedesktop.Platform.openh264;
+					dnf install install clinfo mesa-libOpenCL pocl;
+					dnf install mesa-dri-drivers mesa-va-drivers libva libva-utils;
+					dnf install vdpauinfo libvdpau libvdpau-va-gl libdvdcss;
+					dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU --allowerasing; # Required for ex. DaVinci Resolve
+					break;;
+				No )
+					break;;
+			esac
+		done
 	fi;
 
 	if [ -f /etc/fedora-release ]; then

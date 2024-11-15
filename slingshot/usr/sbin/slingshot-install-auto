@@ -71,7 +71,7 @@ if [ -f /etc/fedora-release ]; then
 	echo "${red}Installing Android Studio...${coloroff}";
 	flatpak --user install com.google.AndroidStudio -y;
 	echo "${red}Giving Android Studio necessary permissions...${coloroff}";
-	flatpak --user override com.google.AndroidStudio --device=dri --device=kvm --share=network -y;
+	flatpak --user override com.google.AndroidStudio --device=dri --device=kvm --share=network;
 
 	echo "${red}Installing enjarify...${coloroff}";
 	dnf install enjarify -y;
@@ -83,19 +83,19 @@ if [ -f /etc/fedora-release ]; then
 	echo "${red}Installing Signal...${coloroff}";
 	flatpak --user install org.signal.Signal -y;
 	echo "${red}Giving Signal necessary permissions...${coloroff}";
-	flatpak --user override org.signal.Signal --share=network --socket=pulseaudio -y;
+	flatpak --user override org.signal.Signal --share=network --socket=pulseaudio;
 	echo "${red}Enabling Wayland Support...${coloroff}";
-	flatpak --user override org.signal.Signal --env=ELECTRON_OZONE_PLATFORM_HINT=auto -y;
+	flatpak --user override org.signal.Signal --env=ELECTRON_OZONE_PLATFORM_HINT=auto;
 
 	echo "${red}Installing VLC...${coloroff}";
 	flatpak --user install org.videolan.VLC org.videolan.VLC.Plugin.pause_click org.videolan.VLC.Plugin.fdkaac org.videolan.VLC.Plugin.bdj org.videolan.VLC.Plugin.makemkv -y;
 	echo "${red}Giving VLC necessary permissions...${coloroff}";
-	flatpak --user override org.videolan.VLC --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11 -y;
+	flatpak --user override org.videolan.VLC --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
 				
 	echo "${red}Installing qBittorrent...${coloroff}";
 	flatpak --user install org.qbittorrent.qBittorrent -y;
 	echo "${red}Giving qBittorrent necessary permissions...${coloroff}";
-	flatpak --user override org.qbittorrent.qBittorrent --share=network -y;
+	flatpak --user override org.qbittorrent.qBittorrent --share=network;
 
 	echo "${red}Installing Lollypop...${coloroff}";
 	flatpak --user install org.gnome.Lollypop -y;
@@ -106,12 +106,12 @@ if [ -f /etc/fedora-release ]; then
 	echo "${red}Installing Audacity...${coloroff}";
 	flatpak --user install org.audacityteam.Audacity -y;
 	echo "${red}Giving Audacity necessary permissions...${coloroff}";
-	flatpak --user override org.audacityteam.Audacity --socket=pulseaudio -y;
+	flatpak --user override org.audacityteam.Audacity --socket=pulseaudio;
 
 	echo "${red}Installing OBS...${coloroff}";
 	flatpak --user install com.obsproject.Studio com.obsproject.Studio.Plugin.InputOverlay com.obsproject.Studio.Plugin.Gstreamer com.obsproject.Studio.Plugin.GStreamerVaapi com.obsproject.Studio.Plugin.CompositeBlur com.obsproject.Studio.Plugin.BackgroundRemoval -y;
 	echo "${red}Giving OBS necessary permissions...${coloroff}";
-	flatpak --user override com.obsproject.Studio --device=dri --socket=pulseaudio -y;
+	flatpak --user override com.obsproject.Studio --device=dri --socket=pulseaudio;
 
 	echo "${red}Installing IVPN...${coloroff}";
 	dnf install ivpn ivpn-ui -y;
@@ -123,7 +123,7 @@ if [ -f /etc/fedora-release ]; then
 						echo "${red}Installing MakeMKV...${coloroff}";
 						flatpak --user install com.makemkv.MakeMKV -y;
 						echo "${red}Giving MakeMKV necessary permissions...${coloroff}";
-						flatpak --user override com.makemkv.MakeMKV --share=network -y;
+						flatpak --user override com.makemkv.MakeMKV --share=network;
 						break;;
 					No )
 						break;;
@@ -137,7 +137,7 @@ if [ -f /etc/fedora-release ]; then
 						echo "${red}Installing Prism Launcher...${coloroff}";
 						flatpak --user install org.prismlauncher.PrismLauncher -y;
 						echo "${red}Giving Prism Launcher necessary permissions...${coloroff}";
-						flatpak --user override org.prismlauncher.PrismLauncher --device=dri --share=network --socket=pulseaudio -y;
+						flatpak --user override org.prismlauncher.PrismLauncher --device=dri --share=network --socket=pulseaudio;
 						break;;
 					No )
 						break;;
@@ -151,15 +151,15 @@ if [ -f /etc/fedora-release ]; then
 						echo "${red}Installing Steam...${coloroff}";
 						flatpak --user install com.valvesoftware.Steam com.valvesoftware.Steam.Utility.steamtinkerlaunch com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.valvesoftware.Steam.Utility.InhibitScreensaver -y;
 						echo "${red}Giving Steam necessary permissions...${coloroff}";
-						flatpak --user override com.valvesoftware.Steam --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11 -y;
+						flatpak --user override com.valvesoftware.Steam --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
 						echo "${red}Disabling hardened_malloc for Steam (Causes it to break)...${coloroff}";
-						flatpak --user override com.valvesoftware.Steam --nofilesystem=host-os --unset-env=LD_PRELOAD -y;
+						flatpak --user override com.valvesoftware.Steam --nofilesystem=host-os --unset-env=LD_PRELOAD;
 						echo "${red}Installing WINE...${coloroff}";
 						dnf install wine -y;
 						echo "${red}Installing ProtonUp-Qt... (Allows easily installing, updating, & managing Proton, Proton-GE, & Wine)${coloroff}";
 						flatpak --user install net.davidotek.pupgui2 -y;
 						echo "${red}Giving ProtonUp-Qt necessary permissions...${coloroff}";
-						flatpak --user override net.davidotek.pupgui2 --share=network -y;
+						flatpak --user override net.davidotek.pupgui2 --share=network;
 						break;;
 					No )
 						break;;
