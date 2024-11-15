@@ -66,8 +66,9 @@ install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/user/restic-backup@.servi
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/user/restic-backup@.timer %{buildroot}/usr/lib/systemd/user/restic-backup@.timer;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/tmpfiles.d/99-brace-proc.conf %{buildroot}/usr/lib/tmpfiles.d/99-brace-proc.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/tmpfiles.d/99-slingshot-sys.conf %{buildroot}/usr/lib/tmpfiles.d/99-slingshot-sys.conf;
-install -Dm644 %{_sourcedir}/brace/usr/lib/udev/rules.d/10-trim.rules %{buildroot}/usr/lib/udev/rules.d/10-trim.rules;
+install -Dm644 %{_sourcedir}/slingshot/usr/lib/udev/rules.d/10-trim.rules %{buildroot}/usr/lib/udev/rules.d/10-trim.rules;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/udev/rules.d/50-usb-realtek-net-exceprt.rules %{buildroot}/usr/lib/udev/rules.d/50-usb-realtek-net-exceprt.rules;
+install -Dm644 %{_sourcedir}/slingshot/usr/lib/udev/rules.d/51-android.rules %{buildroot}/usr/lib/udev/rules.d/51-android.rules;
 install -Dm755 %{_sourcedir}/slingshot/usr/bin/slingshot %{buildroot}/usr/bin/slingshot;
 install -Dm755 %{_sourcedir}/slingshot/usr/bin/slingshot-auto %{buildroot}/usr/bin/slingshot-auto;
 install -Dm755 %{_sourcedir}/slingshot/usr/sbin/brace-audit %{buildroot}/usr/sbin/brace-audit;
@@ -123,7 +124,9 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/lib/systemd/user/restic-backup@.timer
 /usr/lib/tmpfiles.d/99-brace-proc.conf
 /usr/lib/tmpfiles.d/99-slingshot-sys.conf
+/usr/lib/udev/rules.d/10-trim.rules
 /usr/lib/udev/rules.d/50-usb-realtek-net-exceprt.rules
+/usr/lib/udev/rules.d/51-android.rules
 /usr/bin/slingshot
 /usr/bin/slingshot-auto
 /usr/sbin/brace-audit

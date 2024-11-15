@@ -112,14 +112,14 @@ Credits
 	- AGPLv3: https://codeberg.org/divested/brace/src/branch/master/LICENSE
 	- https://codeberg.org/divested/brace
 	- Donate: https://divested.dev/donate
-- userjs-arkenfox.js
-	- @thorin-oakenpants + @earthlng + @claustromaniac
-	- MIT: https://github.com/arkenfox/user.js/blob/af516315971b7c94075db1e317bee5b12dc3b781/LICENSE.txt
-	- https://github.com/arkenfox/user.js
 - 99-brace-proc.conf and 99-brace-sys.conf
 	- Topi Miettinen (@topimiettinen)
 	- GPL-2.0+: https://salsa.debian.org/corsac/hardening-runtime/-/blob/1a315536726cf41b64af6dc65c7cf9b250b5dda1/debian/copyright
 	- https://salsa.debian.org/corsac/hardening-runtime/-/commit/1a315536726cf41b64af6dc65c7cf9b250b5dda1
+- 51-android.rules (android-udev-rules)
+	- [Gianluca Boiano (M0Rf30)](https://github.com/M0Rf30), [JoesCat](https://github.com/joescat), & contributors
+	- GPL-3.0+: https://github.com/M0Rf30/android-udev-rules/blob/main/LICENSE
+	- https://github.com/M0Rf30/android-udev-rules
 - brace-rpm-verify
 	- @doktor5000
 	- CC BY-SA 3.0: https://stackoverflow.com/help/licensing
@@ -132,12 +132,12 @@ Credits
 	- Link Dupont
 	- CC BY-SA 3.0: https://fedoramagazine.org/terms-and-conditions/
 	- https://fedoramagazine.org/automate-backups-with-restic-and-systemd/
-- chrony.brace.conf
+- chrony.slingshot.conf
 	- GrapheneOS
 	- MIT: https://github.com/GrapheneOS/infrastructure/blob/main/LICENSE
 	- https://github.com/GrapheneOS/infrastructure/blob/main/chrony.conf
 	- Donate: https://grapheneos.org/donate
-- modprobe.d/brace.conf additional module blocking
+- modprobe.d/slingshot.conf additional module blocking
 	- @madaidan
 	- List likely uncopyrightable
 	- https://madaidans-insecurities.github.io/guides/linux-hardening.html#kasr-kernel-modules

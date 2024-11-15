@@ -196,12 +196,6 @@ if [ -f /etc/fedora-release ]; then
 							Yes )
 								echo "${red}Installing ADB...${coloroff}";
 								dnf install android-tools;
-								echo "${red}Adding android-udev-rules COPR...${coloroff}";
-								dnf copr enable nielsenb/android-udev-rules;
-								echo "${red}Updating DNF cache...${coloroff}";
-								dnf update --refresh;
-								echo "${red}Installing android-udev-rules...${coloroff}";
-								dnf install android-udev-rules;
 								break;;
 							No )
 								break;;

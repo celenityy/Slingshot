@@ -27,7 +27,6 @@ if [ -f /etc/fedora-release ]; then
 	dnf copr enable secureblue/hardened-chromium -y;
 	dnf config-manager addrepo --from-repofile='https://repository.mullvad.net/rpm/stable/mullvad.repo' -y;
 	dnf config-manager addrepo --from-repofile='https://slingshot.celenity.dev/vscodium.repo' -y;
-	dnf copr enable nielsenb/android-udev-rules -y;
 	dnf config-manager addrepo --from-repofile='https://repo.ivpn.net/stable/fedora/generic/ivpn.repo' -y;
 
 	echo "${red}Updating DNF Cache...${coloroff}";
@@ -67,9 +66,6 @@ if [ -f /etc/fedora-release ]; then
 
 	echo "${red}Installing ADB...${coloroff}";
 	dnf install android-tools -y;
-
-	echo "${red}Installing android-udev-rules...${coloroff}";
-	dnf install android-udev-rules -y;
 
 	echo "Installing Android Studio...";
 	echo "${red}Installing Android Studio...${coloroff}";
