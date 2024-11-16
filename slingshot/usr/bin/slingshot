@@ -228,7 +228,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf install python3 python3-devel;
 		dnf install kernel-devel kernel-headers;
 		dnf install gcc glibc glibc-devel glibc-headers;
-		dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU;
+		dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU; # Required for ex. DaVinci Resolve
 		dnf install java-1.8.0-openjdk java-1.8.0-openjdk-devel java-11-openjdk java-11-openjdk-devel java-17-openjdk java-17-openjdk-devel java-21-openjdk java-21-openjdk-devel eclipse-jdt;
 	fi
 
@@ -672,7 +672,6 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 					dnf install install clinfo mesa-libOpenCL pocl;
 					dnf install mesa-dri-drivers mesa-va-drivers libva libva-utils;
 					dnf install vdpauinfo libvdpau libvdpau-va-gl libdvdcss;
-					dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU --allowerasing; # Required for ex. DaVinci Resolve
 					dnf install yt-dlp;
 					break;;
 				No )
