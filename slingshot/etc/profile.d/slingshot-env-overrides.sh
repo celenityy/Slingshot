@@ -38,8 +38,10 @@ export ELECTRON_OZONE_PLATFORM_HINT='auto';
 # gpg
 export GPG_TTY=$(tty);
 
-# disable JIT
+# disable JIT in GNOME JavaScript (used in various built-in GNOME applications)
 export GJS_DISABLE_JIT=1;
+
+# disable JIT in WebKit
 export JavaScriptCoreUseJIT=0;
 
 # disable telemetry for various programs

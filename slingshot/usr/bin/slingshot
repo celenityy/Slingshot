@@ -300,8 +300,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
-					flatpak override --system --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions;
-					flatpak override --user --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions;
+					flatpak override --system --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --disallow=bluetooth --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nofilesystem=xdg-run/discord-ipc-0 --nofilesystem=xdg-videos --nofilesystem=xdg-desktop --nofilesystem=xdg-documents --nofilesystem=xdg-download --nofilesystem=xdg-pictures --nofilesystem=xdg-music --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions --env=ELECTRON_OZONE_PLATFORM_HINT=auto;
+					flatpak override --user --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --disallow=bluetooth --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nofilesystem=xdg-videos --nofilesystem=xdg-desktop --nofilesystem=xdg-documents --nofilesystem=xdg-download --nofilesystem=xdg-pictures --nofilesystem=xdg-music --nofilesystem=xdg-run/discord-ipc-0 --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions --env=ELECTRON_OZONE_PLATFORM_HINT=auto;
 					break;;
 				No )
 					break;;
@@ -651,7 +651,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#Codecs
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to install codecs for media playback? (Recommended)?";
+		echo "Would you like to install codecs & dependencies for media playback? (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -672,6 +672,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 					dnf install mesa-dri-drivers mesa-va-drivers libva libva-utils;
 					dnf install vdpauinfo libvdpau libvdpau-va-gl libdvdcss;
 					dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU --allowerasing; # Required for ex. DaVinci Resolve
+					dnf install yt-dlp;
 					break;;
 				No )
 					break;;

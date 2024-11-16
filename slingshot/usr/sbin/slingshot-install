@@ -36,7 +36,7 @@ if [ -f /etc/fedora-release ]; then
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Firefox? (Recommended, Preinstalled)";
+				echo "Firefox? (RPM, Recommended, Preinstalled)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -59,7 +59,7 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Brave?";
+				echo "Brave? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -75,7 +75,7 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Hardened Chromium?";
+				echo "Hardened Chromium? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -90,7 +90,7 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Mullvad Browser?";
+				echo "Mullvad Browser? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -105,7 +105,7 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Tor Browser?";
+				echo "Tor Browser? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -128,7 +128,7 @@ if [ -f /etc/fedora-release ]; then
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Fedora's Recommended Developer Tools?";
+				echo "Fedora's Recommended Developer Tools? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -141,7 +141,7 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "General Development Languages/Support/Dependencies?";
+				echo "General Development Languages/Support/Dependencies? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -154,7 +154,7 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done				
-				echo "nano?";
+				echo "nano? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -165,7 +165,7 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "VSCodium?";
+				echo "VSCodium? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -190,7 +190,7 @@ if [ -f /etc/fedora-release ]; then
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "ADB?";
+				echo "ADB? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -201,20 +201,20 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Android Studio?";
+				echo "Android Studio? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
 								echo "${red}Installing Android Studio...${coloroff}";
 								flatpak --user install com.google.AndroidStudio;
-								echo "${red}Giving Android Studio necessary permissions...${coloroff}";
+								echo "${red}Granting Android Studio necessary permissions...${coloroff}";
 								flatpak --user override com.google.AndroidStudio --device=dri --device=kvm --share=network;
 								break;;
 							No )
 								break;;
 						esac
 					done				
-				echo "enjarify?";
+				echo "enjarify? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -235,7 +235,7 @@ if [ -f /etc/fedora-release ]; then
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Fedora's Recommended Virtualization Software?";
+				echo "Fedora's Recommended Virtualization Software? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -256,22 +256,51 @@ if [ -f /etc/fedora-release ]; then
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Signal?";
+				echo "Signal? (Flatpak, Recommended)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
 								echo "${red}Installing Signal...${coloroff}";
 								flatpak --user install org.signal.Signal;
-								echo "${red}Giving Signal necessary permissions...${coloroff}";
-								flatpak --user override org.signal.Signal --share=network --socket=pulseaudio;
-								echo "${red}Enabling Wayland Support...${coloroff}";
-								flatpak --user override org.signal.Signal --env=ELECTRON_OZONE_PLATFORM_HINT=auto;
+								echo "${red}Signal will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.signal.Signal --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Signal requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.signal.Signal --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Signal requires access to your connected devices for sharing your webcam.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.signal.Signal --device=all;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "Thunderbird?";
+				echo "Thunderbird? (RPM, Recommended)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -292,6 +321,73 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
+				echo "Proton Mail Bridge? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Proton Mail Bridge...${coloroff}";
+								flatpak --user install ch.protonmail.protonmail-bridge;
+								echo "${red}Proton Mail Bridge will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override ch.protonmail.protonmail-bridge --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install software for Finance?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "Cake Wallet? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Downloading Cake Wallet...${coloroff}";
+								wget https://github.com/cake-tech/cake_wallet/releases/download/v4.20.1/Cake_Wallet_v4.20.1_Linux.flatpak;
+								echo "${red}Installing Cake Wallet...${coloroff}";
+								flatpak --user install Cake_Wallet_v4.20.1_Linux.flatpak;
+								echo "${red}Cake Wallet will not launch with hardened_malloc.${coloroff}";
+								echo "Do you grant it an exception?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.cakewallet.CakeWallet --nofilesystem=host-os --unset-env=LD_PRELOAD;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Cake Wallet will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.cakewallet.CakeWallet --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
 				break;;
 			No )
 				break;;
@@ -302,7 +398,7 @@ if [ -f /etc/fedora-release ]; then
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "VLC?";
+				echo "VLC? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -310,57 +406,56 @@ if [ -f /etc/fedora-release ]; then
 								dnf remove vlc;
 								echo "${red}Installing VLC...${coloroff}";
 								flatpak --user install org.videolan.VLC org.videolan.VLC.Plugin.pause_click org.videolan.VLC.Plugin.fdkaac org.videolan.VLC.Plugin.bdj org.videolan.VLC.Plugin.makemkv;
-								echo "${red}Giving VLC necessary permissions...${coloroff}";
-								flatpak --user override org.videolan.VLC --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
+								echo "${red}VLC will not launch without access to the X11 windowing system.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.videolan.VLC --nosocket=wayland --socket=fallback-x11;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}VLC requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.videolan.VLC --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}VLC requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.videolan.VLC --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}VLC requires network access for downloading & updating metadata.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.videolan.VLC --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "Kodi?";
-				select yn in "Yes" "No"; do
-					case $yn in
-							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
-								dnf remove kodi;
-								echo "${red}Installing Kodi...${coloroff}";
-								flatpak --user install tv.kodi.Kodi;
-								echo "${red}Giving Kodi necessary permissions...${coloroff}";
-								flatpak --user override tv.kodi.Kodi --device=dri --share=network --socket=pulseaudio;
-								break;;
-							No )
-								break;;
-						esac
-					done
-				echo "MakeMKV?";
-				select yn in "Yes" "No"; do
-					case $yn in
-							Yes )
-								echo "${red}Installing MakeMKV...${coloroff}";
-								flatpak --user install com.makemkv.MakeMKV;
-								echo "${red}Giving MakeMKV necessary permissions...${coloroff}";
-								flatpak --user override com.makemkv.MakeMKV --share=network;
-								break;;
-							No )
-								break;;
-						esac
-					done
-				echo "qBittorrent?";
-				select yn in "Yes" "No"; do
-					case $yn in
-							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
-								dnf remove qbittorrent;
-								echo "${red}Installing qBittorrent...${coloroff}";
-								flatpak --user install org.qbittorrent.qBittorrent;
-								echo "${red}Giving qBittorrent necessary permissions...${coloroff}";
-								flatpak --user override org.qbittorrent.qBittorrent --share=network;
-								break;;
-							No )
-								break;;
-						esac
-					done
-				echo "Lollypop?";
+				echo "Lollypop? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -368,17 +463,365 @@ if [ -f /etc/fedora-release ]; then
 								dnf remove lollypop;
 								echo "${red}Installing Lollypop...${coloroff}";
 								flatpak --user install org.gnome.Lollypop;
+								echo "${red}Lollypop requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.gnome.Lollypop --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Lollypop requires network access for downloading & updating metadata.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.gnome.Lollypop --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "yt-dlp?";
+				echo "qBittorrent? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing yt-dlp...${coloroff}";
-								dnf install yt-dlp;
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove qbittorrent;
+								echo "${red}Installing qBittorrent...${coloroff}";
+								flatpak --user install org.qbittorrent.qBittorrent;
+								echo "${red}qBittorrent will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.qbittorrent.qBittorrent --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Kodi? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove kodi;
+								echo "${red}Installing Kodi...${coloroff}";
+								flatpak --user install tv.kodi.Kodi;
+								echo "${red}Kodi requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override tv.kodi.Kodi --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Kodi requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override tv.kodi.Kodi --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Kodi requires network access for remote playback & add-on installation/updates.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override tv.kodi.Kodi --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "NewPipe? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing NewPipe..${coloroff}";
+								flatpak --user install net.newpipe.NewPipe;
+								echo "${red}NewPipe will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.newpipe.NewPipe --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}NewPipe requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.newpipe.NewPipe --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}NewPipe requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.newpipe.NewPipe --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Jellyfin Media Player? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Jellyfin Media Player...${coloroff}";
+								flatpak --user install com.github.iwalton3.jellyfin-media-player;
+								echo "${red}Jellyfin will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.github.iwalton3.jellyfin-media-player --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Jellyfin requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.github.iwalton3.jellyfin-media-player --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Jellyfin MPV Shim? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Jellyfin MPV Shim...${coloroff}";
+								flatpak --user install com.github.iwalton3.jellyfin-mpv-shim;
+								echo "${red}Jellyfin MPV Shim will not launch without access to the X11 windowing system.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.github.iwalton3.jellyfin-mpv-shim --socket=x11;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Jellyfin MPV Shim will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.github.iwalton3.jellyfin-mpv-shim --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Jellyfin MPV Shim requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.github.iwalton3.jellyfin-mpv-shim --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Jellyfin MPV Shim requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.github.iwalton3.jellyfin-mpv-shim --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Finamp? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Finamp..${coloroff}";
+								flatpak --user install com.unicornsonlsd.finamp;
+								echo "${red}Finamp will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.unicornsonlsd.finamp --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Finamp requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.unicornsonlsd.finamp --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Finamp requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.unicornsonlsd.finamp --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "MakeMKV? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing MakeMKV...${coloroff}";
+								flatpak --user install com.makemkv.MakeMKV;
+								echo "${red}MakeMKV requires access to your connected devices for ripping media from your disk drive.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.makemkv.MakeMKV --device=all;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}MakeMKV requires network access for downloading & updating decryption keys.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.makemkv.MakeMKV --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Asunder? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Asunder...${coloroff}";
+								flatpak --user install ca.littlesvr.asunder;
+								echo "${red}Asunder will not launch without access to the X11 windowing system.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override ca.littlesvr.asunder --socket=x11;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Asunder requires access to your connected devices for ripping media from your disk drive.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override ca.littlesvr.asunder --device=all;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Asunder requires network access for downloading & updating metadata.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override ca.littlesvr.asunder --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Asunder requires access to a directory on your system for saving media.${coloroff}";
+								echo "By default, we can grant it access to its own folder located at ~/Music/Asunder";
+								echo "${red}Make sure to set this as your destination folder in Asunder's "General" Preferences!${coloroff}";
+								echo "Do you accept this?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											mkdir -p ~/Music/Asunder;
+											flatpak --user override ca.littlesvr.asunder --filesystem=xdg-music/Asunder;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
@@ -394,7 +837,7 @@ if [ -f /etc/fedora-release ]; then
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Audacity?";
+				echo "Audacity? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -402,14 +845,23 @@ if [ -f /etc/fedora-release ]; then
 								dnf remove audacity audacity-freeworld;
 								echo "${red}Installing Audacity...${coloroff}";
 								flatpak --user install org.audacityteam.Audacity;
-								echo "${red}Giving Audacity necessary permissions...${coloroff}";
-								flatpak --user override org.audacityteam.Audacity --socket=pulseaudio;
+								echo "${red}Audacity requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.audacityteam.Audacity --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "GIMP?";
+				echo "GIMP? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -417,12 +869,49 @@ if [ -f /etc/fedora-release ]; then
 								dnf remove gimp;
 								echo "${red}Installing GIMP...${coloroff}";
 								flatpak --user install org.gimp.GIMP;
+								echo "${red}GIMP will not launch without access to the X11 windowing system.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.gimp.GIMP --socket=x11;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "HandBrake?";
+				echo "Inkscape? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove inkscape;
+								echo "${red}Installing Inkscape...${coloroff}";
+								flatpak --user install org.inkscape.Inkscape;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Tux Paint? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove tuxpaint;
+								echo "${red}Installing Tux Paint...${coloroff}";
+								flatpak --user install org.tuxpaint.Tuxpaint;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "HandBrake? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -430,12 +919,23 @@ if [ -f /etc/fedora-release ]; then
 								dnf remove handbrake;
 								echo "${red}Installing HandBrake...${coloroff}";
 								flatpak --user install fr.handbrake.ghb;
+								echo "${red}HandBrake requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override fr.handbrake.ghb --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "Kdenlive?";
+				echo "Kdenlive? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -443,12 +943,34 @@ if [ -f /etc/fedora-release ]; then
 								dnf remove kdenlive;
 								echo "${red}Installing Kdenlive...${coloroff}";
 								flatpak --user install org.kde.kdenlive;
+								echo "${red}Kdenlive requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.kde.kdenlive --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Kdenlive requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.kde.kdenlive --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
 						esac
 					done		
-				echo "OBS?";
+				echo "OBS? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -456,8 +978,50 @@ if [ -f /etc/fedora-release ]; then
 								dnf remove obs-studio;
 								echo "${red}Installing OBS...${coloroff}";
 								flatpak --user install com.obsproject.Studio com.obsproject.Studio.Plugin.InputOverlay com.obsproject.Studio.Plugin.Gstreamer com.obsproject.Studio.Plugin.GStreamerVaapi com.obsproject.Studio.Plugin.CompositeBlur com.obsproject.Studio.Plugin.BackgroundRemoval;
-								echo "${red}Giving OBS necessary permissions...${coloroff}";
-								flatpak --user override com.obsproject.Studio --device=dri --socket=pulseaudio;
+								echo "${red}OBS requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.obsproject.Studio --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}OBS requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.obsproject.Studio --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}OBS requires access to your connected devices for recording via your webcam.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.obsproject.Studio --device=all;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}OBS requires network access for streaming to online services.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.obsproject.Studio --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
@@ -473,20 +1037,7 @@ if [ -f /etc/fedora-release ]; then
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Prism Launcher? (Minecraft)";
-				select yn in "Yes" "No"; do
-					case $yn in
-							Yes )
-								echo "${red}Installing Prism Launcher...${coloroff}";
-								flatpak --user install org.prismlauncher.PrismLauncher;
-								echo "${red}Giving Prism Launcher necessary permissions...${coloroff}";
-								flatpak --user override org.prismlauncher.PrismLauncher --device=dri --share=network --socket=pulseaudio;
-								break;;
-							No )
-								break;;
-						esac
-					done
-				echo "Steam?";
+				echo "Steam? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -494,16 +1045,595 @@ if [ -f /etc/fedora-release ]; then
 								dnf remove steam;
 								echo "${red}Installing Steam...${coloroff}";
 								flatpak --user install com.valvesoftware.Steam com.valvesoftware.Steam.Utility.steamtinkerlaunch com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.valvesoftware.Steam.Utility.InhibitScreensaver;
-								echo "${red}Giving Steam necessary permissions...${coloroff}";
-								flatpak --user override com.valvesoftware.Steam --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
-								echo "${red}Disabling hardened_malloc for Steam (Causes it to break)...${coloroff}";
-								flatpak --user override com.valvesoftware.Steam --nofilesystem=host-os --unset-env=LD_PRELOAD;
+								echo "${red}Steam will not launch without access to the X11 windowing system.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.valvesoftware.Steam --nosocket=wayland --socket=fallback-x11;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Steam will not launch with hardened_malloc.${coloroff}";
+								echo "Do you grant it an exception?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.valvesoftware.Steam --nofilesystem=host-os --unset-env=LD_PRELOAD;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Steam will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.valvesoftware.Steam --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Steam requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.valvesoftware.Steam --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Games will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.valvesoftware.Steam --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Lutris? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove lutris;
+								echo "${red}Installing Lutris...${coloroff}";
+								flatpak --user install net.lutris.Lutris;
+								echo "${red}Lutris will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.lutris.Lutris --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Lutris requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.lutris.Lutris --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Games will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.lutris.Lutris --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Prism Launcher? (Minecraft, Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Prism Launcher...${coloroff}";
+								flatpak --user install org.prismlauncher.PrismLauncher;
+								echo "${red}Prism Launcher will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.prismlauncher.PrismLauncher --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Prism Launcher requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.prismlauncher.PrismLauncher --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Prism Launcher will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.prismlauncher.PrismLauncher --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Sober? (Roblox, Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Sober...${coloroff}";
+								flatpak --user install https://sober.vinegarhq.org/sober.flatpakref;
+								echo "${red}Sober will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.vinegarhq.Sober --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Sober requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.vinegarhq.Sober --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Sober will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.vinegarhq.Sober --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Luanti? (Minetest, Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Luanti...${coloroff}";
+								flatpak --user install net.minetest.Minetest;
+								echo "${red}Luanti will not launch without access to the X11 windowing system.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.minetest.Minetest --nosocket=wayland --socket=fallback-x11;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Luanti will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.minetest.Minetest --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Luanti requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.minetest.Minetest --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Luanti will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.minetest.Minetest --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "SuperTuxKart? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing SuperTuxKart...${coloroff}";
+								flatpak --user install net.supertuxkart.SuperTuxKart;
+								echo "${red}SuperTuxKart requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.supertuxkart.SuperTuxKart --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}SuperTuxKart will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.supertuxkart.SuperTuxKart --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}SuperTuxKart requires network access for online multiplayer & downloading add-ons.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.supertuxkart.SuperTuxKart --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install software for compatibility with Windows Software?";
+	echo "Recommended for Gaming!";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "WINE? (RPM)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
 								echo "${red}Installing WINE...${coloroff}";
 								dnf install wine;
-								echo "${red}Installing ProtonUp-Qt... (Allows easily installing, updating, & managing Proton, Proton-GE, & Wine)${coloroff}";
+								dnf install winetricks;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Bottles? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Bottles...${coloroff}";
+								flatpak --user install com.usebottles.bottles;
+								echo "${red}Bottles will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.usebottles.bottles --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Bottles requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.usebottles.bottles --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Software will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.usebottles.bottles --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Protontricks? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Protontricks...${coloroff}";
+								flatpak --user install com.github.Matoking.protontricks;
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "ProtonUp-Qt? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing ProtonUp-Qt...${coloroff}";
 								flatpak --user install net.davidotek.pupgui2;
-								echo "${red}Giving ProtonUp-Qt necessary permissions...${coloroff}";
-								flatpak --user override net.davidotek.pupgui2 --share=network;
+								echo "${red}ProtonUp-Qt will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override net.davidotek.pupgui2 --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
+	echo "Would you like to install any Emulators?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "RetroArch? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing RetroArch...${coloroff}";
+								flatpak --user install org.libretro.RetroArch;
+								echo "${red}RetroArch will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.libretro.RetroArch --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}RetroArch requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.libretro.RetroArch --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}RetroArch will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.libretro.RetroArch --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}RetroArch requires access to a directory on your system for scanning & playing ROMs.${coloroff}";
+								echo "By default, we can grant it read-only access to ~/ROMs";
+								echo "Do you accept this?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											mkdir -p ~/ROMs;
+											flatpak --user override org.libretro.RetroArch --filesystem=~/ROMs:ro;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "Dolphin? (GameCube/Wii, Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Dolphin...${coloroff}";
+								flatpak --user install org.DolphinEmu.dolphin-emu;
+								echo "${red}Dolphin will not launch without access to the X11 windowing system.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.DolphinEmu.dolphin-emu --socket=x11;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Dolphin will not launch with hardened_malloc.${coloroff}";
+								echo "Do you grant it an exception?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.DolphinEmu.dolphin-emu --nofilesystem=host-os --unset-env=LD_PRELOAD;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Dolphin requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.DolphinEmu.dolphin-emu --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Dolphin will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.DolphinEmu.dolphin-emu --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Dolphin requires network access for online multiplayer & other functionality.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.DolphinEmu.dolphin-emu --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "PPSSPP? (PSP, Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing PPSSPP...${coloroff}";
+								flatpak --user install org.ppsspp.PPSSPP;
+								echo "${red}PPSSPP will not launch without access to the X11 windowing system.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.ppsspp.PPSSPP --socket=x11;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}PPSSPP requires access to PulseAudio for audio playback.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.ppsspp.PPSSPP --socket=pulseaudio;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}PPSSPP will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.ppsspp.PPSSPP --device=dri;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}PPSSPP requires network access for online multiplayer.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.ppsspp.PPSSPP --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}PPSSPP requires access to a directory on your system for scanning & playing ROMs.${coloroff}";
+								echo "By default, we can grant it read-only access to ~/ROMs";
+								echo "Do you accept this?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											mkdir -p ~/ROMs;
+											flatpak --user override org.ppsspp.PPSSPP --filesystem=~/ROMs:ro;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
@@ -519,7 +1649,7 @@ if [ -f /etc/fedora-release ]; then
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "IVPN?";
+				echo "IVPN? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -534,7 +1664,7 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Mullvad?";
+				echo "Mullvad? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
@@ -549,14 +1679,23 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "ProtonVPN?";
+				echo "ProtonVPN? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
 								echo "${red}Installing ProtonVPN...${coloroff}";
 								flatpak --user install com.protonvpn.www;
-								echo "${red}Giving ProtonVPN necessary permissions...${coloroff}";
-								flatpak --user override com.protonvpn.www --share=network;
+								echo "${red}ProtonVPN will not function without network access.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override com.protonvpn.www --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
 								break;;
 							No )
 								break;;
