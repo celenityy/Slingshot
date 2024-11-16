@@ -224,11 +224,12 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	#Dependencies
 	if [ -f /etc/fedora-release ]; then
 		echo "Installing various important dependencies...";
+		dnf install wget curl;
 		dnf install python3 python3-devel;
 		dnf install kernel-devel kernel-headers;
 		dnf install gcc glibc glibc-devel glibc-headers;
 		dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU;
-		dnf install java-1.8.0-openjdk java-1.8.0-openjdk-devel java-11-openjdk java-11-openjdk-devel java-17-openjdk java-17-openjdk-devel java-21-openjdk java-21-openjdk-devel eclipse-jdt proguard;
+		dnf install java-1.8.0-openjdk java-1.8.0-openjdk-devel java-11-openjdk java-11-openjdk-devel java-17-openjdk java-17-openjdk-devel java-21-openjdk java-21-openjdk-devel eclipse-jdt;
 	fi
 
 	#Services
