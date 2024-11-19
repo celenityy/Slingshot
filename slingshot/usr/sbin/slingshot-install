@@ -1707,6 +1707,87 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
+	echo "Would you like to install software for productivity?";
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes )
+				echo "Obsidian? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Obsidian...${coloroff}";
+								flatpak --user install md.obsidian.Obsidian;
+								echo "${red}Obsidian requires network access for Sync & add-on installation/updates..${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override md.obsidian.Obsidian --share=network;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								echo "${red}Obsidian requires access to a directory on your system for saving notes.${coloroff}";
+								echo "By default, we can grant it access to its own folder located at ~/Documents/Obsidian";
+								echo "${red}Make sure to set this as your vault location during Obsidian's Set-up!${coloroff}";
+								echo "Do you accept this?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											mkdir -p ~/Documents/Obsidian;
+											flatpak --user override md.obsidian.Obsidian --filesystem=xdg-documents/Obsidian;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				echo "LibreOffice? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Removing RPM if already installed...${coloroff}";
+								dnf remove libreoffice-core;
+								echo "${red}Installing LibreOffice..${coloroff}";
+								flatpak --user install org.libreoffice.LibreOffice;
+								break;;
+							No )
+								break;;
+						esac
+					done								
+				echo "OnlyOffice? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing OnlyOffice...${coloroff}";
+								flatpak --user install org.onlyoffice.desktopeditors;
+								echo "${red}OnlyOffice will not launch without access to the X11 windowing system.${coloroff}";
+								echo "Do you grant this permission?";
+								select yn in "Yes" "No"; do
+									case $yn in
+										Yes )
+											flatpak --user override org.onlyoffice.desktopeditors --socket=x11;
+											break;;
+										No )
+											break;;
+										esac
+									done
+								break;;
+							No )
+								break;;
+						esac
+					done
+				break;;
+			No )
+				break;;
+		esac
+	done
+
 	echo "${red}Cleaning up DNF...${coloroff}";
 	dnf autoremove;
 	dnf clean all;
