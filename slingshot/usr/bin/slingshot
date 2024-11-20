@@ -123,7 +123,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 		#Memory Hardening
 		#grubby --update-kernel=ALL --args="mem_encrypt=on"; #Enables SME on supported AMD platforms #XXX: can break boot, usually doesn't work but TSME in UEFI may
-		grubby --update-kernel=ALL --args="efi=disable_early_pci_dma"; #Prevents DMA during early bringup #XXX: can break boot
+		#grubby --update-kernel=ALL --args="efi=disable_early_pci_dma"; #Prevents DMA during early bringup #XXX: can break boot
 		grubby --update-kernel=ALL --args="init_on_alloc=1"; #Zero pages on allocation
 		grubby --update-kernel=ALL --args="init_on_free=1"; #Zero pages on free
 		grubby --update-kernel=ALL --args="page_alloc.shuffle=1"; #Randomize free lists
