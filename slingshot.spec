@@ -1,6 +1,6 @@
 Name: slingshot
 Version: 20241122
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: At last, the ultimate Linux set-up!
 License: AGPLv3+
 URL: https://slingshot.celenity.dev
@@ -145,6 +145,6 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/share/doc/slingshot/README.md
 
 %changelog
-* Friday November 22 celenity <celenity@celenity.dev> - 20241122-1
+* Friday November 22 celenity <celenity@celenity.dev> - 20241122-2
 - Disables FWUPD Reporting & P2P Sharing
 - Tweaks & minor fixes

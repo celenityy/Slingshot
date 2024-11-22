@@ -1,7 +1,7 @@
 # Maintainer: celenity
 pkgname=Slingshot
 pkgver=20241122
-pkgrel=1
+pkgrel=2
 pkgdesc="At last, the ultimate Linux set-up!"
 arch=('any')
 license=('GPL3')
