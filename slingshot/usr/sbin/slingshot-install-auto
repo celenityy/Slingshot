@@ -53,10 +53,10 @@ if [ -f /etc/fedora-release ]; then
 
 	echo "Installing Fedora's Recommended Developer Tools...";
 	echo "${red}Installing the "Development Tools" group...${coloroff}";
-	dnf group install development-tools --with-optional -y;
+	dnf group install development-tools -y;
 
 	echo "${red}Installing General Development Languages/Support/Dependencies...${coloroff}";
-	dnf install cargo cmake coreutils copr-rpmbuild fedpkg git-core make maven mercurial mock pacman perl proguard rpkg rpm-build rpmdevtools rpmlint ruby rust;
+	dnf install cargo cmake coreutils copr-rpmbuild fedpkg git-core make maven mercurial mock pacman perl proguard rpkg rpm-build rpmdevtools rpmlint ruby rust -y;
 	
 	echo "${red}Installing nano...${coloroff}";
 	dnf install nano -y;
@@ -70,7 +70,7 @@ if [ -f /etc/fedora-release ]; then
 	echo "Installing Android Studio...";
 	echo "${red}Installing Android Studio...${coloroff}";
 	flatpak --user install com.google.AndroidStudio -y;
-	echo "${red}Giving Android Studio necessary permissions...${coloroff}";
+	echo "${red}Granting Android Studio necessary permissions...${coloroff}";
 	flatpak --user override com.google.AndroidStudio --device=dri --device=kvm --share=network;
 
 	echo "${red}Installing enjarify...${coloroff}";
@@ -82,61 +82,111 @@ if [ -f /etc/fedora-release ]; then
 
 	echo "${red}Installing Signal...${coloroff}";
 	flatpak --user install org.signal.Signal -y;
-	echo "${red}Giving Signal necessary permissions...${coloroff}";
+	echo "${red}Granting Signal necessary permissions...${coloroff}";
 	flatpak --user override org.signal.Signal --share=network --socket=pulseaudio;
-	echo "${red}Enabling Wayland Support...${coloroff}";
-	flatpak --user override org.signal.Signal --env=ELECTRON_OZONE_PLATFORM_HINT=auto;
 
 	echo "${red}Installing VLC...${coloroff}";
 	flatpak --user install org.videolan.VLC org.videolan.VLC.Plugin.pause_click org.videolan.VLC.Plugin.fdkaac org.videolan.VLC.Plugin.bdj org.videolan.VLC.Plugin.makemkv -y;
-	echo "${red}Giving VLC necessary permissions...${coloroff}";
-	flatpak --user override org.videolan.VLC --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
-				
-	echo "${red}Installing qBittorrent...${coloroff}";
-	flatpak --user install org.qbittorrent.qBittorrent -y;
-	echo "${red}Giving qBittorrent necessary permissions...${coloroff}";
-	flatpak --user override org.qbittorrent.qBittorrent --share=network;
-
+	echo "${red}Granting VLC necessary permissions...${coloroff}";
+	flatpak --user override org.videolan.VLC --device=dri --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
+	
 	echo "${red}Installing Lollypop...${coloroff}";
 	flatpak --user install org.gnome.Lollypop -y;
+	
+	echo "${red}Installing qBittorrent...${coloroff}";
+	flatpak --user install org.qbittorrent.qBittorrent -y;
+	echo "${red}Granting qBittorrent necessary permissions...${coloroff}";
+	flatpak --user override org.qbittorrent.qBittorrent --share=network;
 
-	echo "${red}Installing yt-dlp...${coloroff}";
-	dnf install yt-dlp -y;
-
-	echo "${red}Installing Audacity...${coloroff}";
-	flatpak --user install org.audacityteam.Audacity -y;
-	echo "${red}Giving Audacity necessary permissions...${coloroff}";
-	flatpak --user override org.audacityteam.Audacity --socket=pulseaudio;
+	echo "${red}Installing Finamp..${coloroff}";
+	flatpak --user install com.unicornsonlsd.finamp -y;
+	echo "${red}Granting Finamp necessary permissions...${coloroff}";
+	flatpak --user override com.unicornsonlsd.finamp --share=network --socket=pulseaudio; 
 
 	echo "${red}Installing OBS...${coloroff}";
 	flatpak --user install com.obsproject.Studio com.obsproject.Studio.Plugin.InputOverlay com.obsproject.Studio.Plugin.Gstreamer com.obsproject.Studio.Plugin.GStreamerVaapi com.obsproject.Studio.Plugin.CompositeBlur com.obsproject.Studio.Plugin.BackgroundRemoval -y;
-	echo "${red}Giving OBS necessary permissions...${coloroff}";
+	echo "${red}Granting OBS necessary permissions...${coloroff}";
 	flatpak --user override com.obsproject.Studio --device=dri --socket=pulseaudio;
+
+	echo "${red}Installing WINE...${coloroff}";
+	dnf install wine -y;
+	dnf install winetricks -y;
 
 	echo "${red}Installing IVPN...${coloroff}";
 	dnf install ivpn ivpn-ui -y;
+	
+	echo "${red}Installing Obsidian...${coloroff}";
+	flatpak --user install md.obsidian.Obsidian -y;
+	echo "${red}Granting Obsidian necessary permissions...${coloroff}";
+	mkdir -p ~/Documents/Obsidian;
+	flatpak --user override md.obsidian.Obsidian --share=network --filesystem=xdg-documents/Obsidian;
 
-	echo "Install MakeMKV?";
+	echo "Install MakeMKV? (Flatpak)";
 		select yn in "Yes" "No"; do
 			case $yn in
 					Yes )
 						echo "${red}Installing MakeMKV...${coloroff}";
 						flatpak --user install com.makemkv.MakeMKV -y;
-						echo "${red}Giving MakeMKV necessary permissions...${coloroff}";
-						flatpak --user override com.makemkv.MakeMKV --share=network;
+						echo "${red}Granting MakeMKV necessary permissions...${coloroff}";
+						flatpak --user override com.makemkv.MakeMKV --device=all --share=network;
 						break;;
 					No )
 						break;;
 				esac
 			done
 
-	echo "Install Prism Launcher? (Minecraft)";
+	echo "Install Asunder? (Flatpak)";
+		select yn in "Yes" "No"; do
+			case $yn in
+					Yes )
+						echo "${red}Installing Asunder...${coloroff}";
+						flatpak --user install ca.littlesvr.asunder;
+						echo "${red}Granting Asunder necessary permissions...${coloroff}";
+						mkdir -p ~/Music/Asunder;
+						flatpak --user override ca.littlesvr.asunder --socket=x11 --device=all --share=network --filesystem=xdg-music/Asunder;
+						break;;
+					No )
+						break;;
+				esac
+			done
+
+	echo "Install Audacity? (Flatpak)";
+		select yn in "Yes" "No"; do
+			case $yn in
+					Yes )
+						echo "${red}Installing Audacity...${coloroff}";
+						flatpak --user install org.audacityteam.Audacity -y;
+						echo "${red}Granting Audacity necessary permissions...${coloroff}";
+						flatpak --user override org.audacityteam.Audacity --socket=pulseaudio;
+						break;;
+					No )
+						break;;
+				esac
+			done
+
+	echo "Install Steam (Flatpak)?";
+		select yn in "Yes" "No"; do
+			case $yn in
+					Yes )
+						echo "${red}Installing Steam...${coloroff}";
+						flatpak --user install com.valvesoftware.Steam com.valvesoftware.Steam.Utility.steamtinkerlaunch com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.valvesoftware.Steam.Utility.InhibitScreensaver -y;
+						echo "${red}Granting Steam necessary permissions...${coloroff}";
+						flatpak --user override com.valvesoftware.Steam --nosocket=wayland --socket=fallback-x11 --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
+						echo "${red}Disabling hardened_malloc for Steam (Causes it to break)...${coloroff}";
+						flatpak --user override com.valvesoftware.Steam --nofilesystem=host-os --unset-env=LD_PRELOAD;
+						break;;
+					No )
+						break;;
+				esac
+			done
+
+	echo "Install Prism Launcher? (Minecraft, Flatpak)";
 		select yn in "Yes" "No"; do
 			case $yn in
 					Yes )
 						echo "${red}Installing Prism Launcher...${coloroff}";
 						flatpak --user install org.prismlauncher.PrismLauncher -y;
-						echo "${red}Giving Prism Launcher necessary permissions...${coloroff}";
+						echo "${red}Granting Prism Launcher necessary permissions...${coloroff}";
 						flatpak --user override org.prismlauncher.PrismLauncher --device=dri --share=network --socket=pulseaudio;
 						break;;
 					No )
@@ -144,27 +194,31 @@ if [ -f /etc/fedora-release ]; then
 				esac
 			done
 
-	echo "Install Steam?";
-		select yn in "Yes" "No"; do
-			case $yn in
-					Yes )
-						echo "${red}Installing Steam...${coloroff}";
-						flatpak --user install com.valvesoftware.Steam com.valvesoftware.Steam.Utility.steamtinkerlaunch com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.valvesoftware.Steam.Utility.InhibitScreensaver -y;
-						echo "${red}Giving Steam necessary permissions...${coloroff}";
-						flatpak --user override com.valvesoftware.Steam --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
-						echo "${red}Disabling hardened_malloc for Steam (Causes it to break)...${coloroff}";
-						flatpak --user override com.valvesoftware.Steam --nofilesystem=host-os --unset-env=LD_PRELOAD;
-						echo "${red}Installing WINE...${coloroff}";
-						dnf install wine -y;
-						echo "${red}Installing ProtonUp-Qt... (Allows easily installing, updating, & managing Proton, Proton-GE, & Wine)${coloroff}";
-						flatpak --user install net.davidotek.pupgui2 -y;
-						echo "${red}Giving ProtonUp-Qt necessary permissions...${coloroff}";
-						flatpak --user override net.davidotek.pupgui2 --share=network;
-						break;;
-					No )
-						break;;
-				esac
-			done
+	echo "Protontricks? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing Protontricks...${coloroff}";
+								flatpak --user install com.github.Matoking.protontricks -y;
+								break;;
+							No )
+								break;;
+						esac
+					done
+
+	echo "ProtonUp-Qt? (Flatpak)";
+				select yn in "Yes" "No"; do
+					case $yn in
+							Yes )
+								echo "${red}Installing ProtonUp-Qt...${coloroff}";
+								flatpak --user install net.davidotek.pupgui2 -y;
+								echo "${red}Granting ProtonUp-Qt necessary permissions...${coloroff}";
+								flatpak --user override net.davidotek.pupgui2 --share=network;
+								break;;
+							No )
+								break;;
+						esac
+					done
 
 	echo "${red}Cleaning up DNF...${coloroff}";
 	dnf autoremove;

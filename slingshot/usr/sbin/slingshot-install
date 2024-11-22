@@ -135,7 +135,7 @@ if [ -f /etc/fedora-release ]; then
 								echo "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
 								echo "${red}Installing the "Development Tools" group...${coloroff}";
-								dnf group install development-tools --with-optional;
+								dnf group install development-tools;
 								break;;
 							No )
 								break;;
@@ -715,17 +715,6 @@ if [ -f /etc/fedora-release ]; then
 									case $yn in
 										Yes )
 											flatpak --user override com.unicornsonlsd.finamp --socket=pulseaudio;
-											break;;
-										No )
-											break;;
-										esac
-									done
-								echo "${red}Finamp requires direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
-								select yn in "Yes" "No"; do
-									case $yn in
-										Yes )
-											flatpak --user override com.unicornsonlsd.finamp --device=dri;
 											break;;
 										No )
 											break;;

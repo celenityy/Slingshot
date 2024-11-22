@@ -1,8 +1,8 @@
 Package: Slingshot
-Version: 20241115-1
+Version: 20241122-1
 Section: custom
 Priority: optional
 Architecture: all
 Essential: no
 Maintainer: celenity
-Description: "Create the ultimate Linux set-up."
+Description: "At last, the ultimate Linux set-up!"

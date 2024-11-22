@@ -1,4 +1,5 @@
 post_install() {
+  echo "NOTE: After installation, please run `sudo slingshot` AND `slingshot` in your terminal.";
   if [ -f /usr/bin/dconf ]; then dconf update; fi;
   echo "Please pepper your /etc/fstab like so:";
   echo "- / can have discard,noatime";

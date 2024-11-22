@@ -1,7 +1,7 @@
 Name: slingshot
-Version: 20241115
+Version: 20241122
 Release: 1%{?dist}
-Summary: Create the ultimate Linux set-up.
+Summary: At last, the ultimate Linux set-up!
 License: AGPLv3+
 URL: https://slingshot.celenity.dev
 BuildArch: noarch
@@ -11,9 +11,12 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 %define _rpmdir %(echo $PWD/build)
 
 %description
-Welcome to the real world.
+NOTE: After installation, please run `sudo slingshot` AND `slingshot` in your terminal.
+
+At last, the ultimate Linux set-up!
 
 %post
+echo "NOTE: After installation, please run `sudo slingshot` AND `slingshot` in your terminal.";
 if [ -f /usr/bin/dconf ]; then dconf update; fi;
 echo "Please pepper your /etc/fstab like so:";
 echo "- / can have discard,noatime";
@@ -142,5 +145,6 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/share/doc/slingshot/README.md
 
 %changelog
-* Saturday November 9 celenity <celenity@celenity.dev> - 20241109-1
-- Initial Release
+* Friday November 22 celenity <celenity@celenity.dev> - 20241122-1
+- Disables FWUPD Reporting & P2P Sharing
+- Tweaks & minor fixes
