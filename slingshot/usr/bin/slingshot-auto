@@ -231,8 +231,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Installing & configuring hardened memory allocator...${coloroff}";
 		dnf install hardened_malloc -y;
-		flatpak override --system --filesystem=host-os:ro --env=LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so -y;
-		flatpak override --user --filesystem=host-os:ro --env=LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so -y;
+		flatpak override --system --filesystem=host-os:ro --env=LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so;
+		flatpak override --user --filesystem=host-os:ro --env=LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so;
 	fi
 
 	#ClamAV
@@ -305,8 +305,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi
 
 	#Flatpak Hardening
-	flatpak override --system --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions;
-	flatpak override --user --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions;
+	flatpak override --system --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --disallow=bluetooth --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nofilesystem=xdg-run/discord-ipc-0 --nofilesystem=xdg-videos --nofilesystem=xdg-desktop --nofilesystem=xdg-documents --nofilesystem=xdg-download --nofilesystem=xdg-pictures --nofilesystem=xdg-music --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions --env=ELECTRON_OZONE_PLATFORM_HINT=auto;
+	flatpak override --user --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --disallow=bluetooth --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nofilesystem=xdg-videos --nofilesystem=xdg-desktop --nofilesystem=xdg-documents --nofilesystem=xdg-download --nofilesystem=xdg-pictures --nofilesystem=xdg-music --nofilesystem=xdg-run/discord-ipc-0 --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions --env=ELECTRON_OZONE_PLATFORM_HINT=auto;
 
 	#Stealth Firewall
 	if [ -x /usr/bin/firewall-cmd ]; then
