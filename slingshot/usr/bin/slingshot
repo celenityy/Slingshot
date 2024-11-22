@@ -33,7 +33,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	if [ -f "/usr/lib/systemd/system/fstrim.timer" ]; then
 		echo "Enabling weekly fstrim";
 		systemctl enable fstrim.timer --now;
-	fi;
+	fi
 
 	#Repos
 	if [ -f /etc/fedora-release ] || [ -f /etc/centos-release ]; then
@@ -47,7 +47,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		echo "Nonfree - ${yellow}EL9: BB24 128A 4BB3 C335 2C0B  75A2 E417 4E6B AAB2 12EA${coloroff}";
 		echo "Nonfree - ${yellow}EL8: CF9F D59F 61D6 6121 46CD AC8E 14B6 792D BDDA 8475${coloroff}";
 		echo "Nonfree - ${yellow}EL7: C3FA F3A9 6B39 8583 91ED  D8D9 C8F7 6DF1 A310 8F6C${coloroff}";
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 
@@ -304,7 +304,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf remove abrt dos2unix evince fedora-bookmarks fedora-chromium-config gnome-connections gnome-remote-desktop gnome-tour gvfs-smb ibus-typing-booster kpartx realmd samba-client sos 'sssd*' texlive-libs totem yelp;
 	fi
 
-		#HARMFUL PACKAGES
+	#HARMFUL PACKAGES
 	if [ -f /etc/fedora-release ]; then
 		echo "Removing dangerous/harmful packages...";
 		echo "";

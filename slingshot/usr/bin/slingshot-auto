@@ -33,7 +33,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	if [ -f "/usr/lib/systemd/system/fstrim.timer" ]; then
 		echo "Enabling weekly fstrim";
 		systemctl enable fstrim.timer --now;
-	fi;
+	fi
 
 	#Repos
 	if [ -f /etc/fedora-release ] || [ -f /etc/centos-release ]; then
@@ -47,7 +47,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		echo "Nonfree - ${yellow}EL9: BB24 128A 4BB3 C335 2C0B  75A2 E417 4E6B AAB2 12EA${coloroff}";
 		echo "Nonfree - ${yellow}EL8: CF9F D59F 61D6 6121 46CD AC8E 14B6 792D BDDA 8475${coloroff}";
 		echo "Nonfree - ${yellow}EL7: C3FA F3A9 6B39 8583 91ED  D8D9 C8F7 6DF1 A310 8F6C${coloroff}";
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 
@@ -168,7 +168,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 		#Memory Hardening
 		#grubby --update-kernel=ALL --args="mem_encrypt=on"; #Enables SME on supported AMD platforms #XXX: can break boot, usually doesn't work but TSME in UEFI may
-		grubby --update-kernel=ALL --args="efi=disable_early_pci_dma"; #Prevents DMA during early bringup #XXX: can break boot
+		#grubby --update-kernel=ALL --args="efi=disable_early_pci_dma"; #Prevents DMA during early bringup #XXX: can break boot
 		grubby --update-kernel=ALL --args="init_on_alloc=1"; #Zero pages on allocation
 		grubby --update-kernel=ALL --args="init_on_free=1"; #Zero pages on free
 		grubby --update-kernel=ALL --args="page_alloc.shuffle=1"; #Randomize free lists
@@ -214,43 +214,18 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	if [ -x /usr/bin/update-crypto-policies ]; then
 		echo "${cyan}Hardening crypto policies...${coloroff}";
 		update-crypto-policies --set NEXT;
-	fi;
+	fi
 
 	#nullok https://networklogician.com/2021/04/11/disable-null-passwords/
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Disabling null/empty passwords...${coloroff}";
 		/usr/bin/sed -i 's/\s+nullok//g' /etc/pam.d/system-auth;
-	fi;
-
-	#Hostname
-	if [ -x /usr/bin/hostnamectl ]; then
-		echo "${cyan}Setting generic hostname...${coloroff}";
-		nmcli general reload conf;
-		hostnamectl set-hostname "localhost";
-		hostnamectl --transient hostname '';
-		nmcli general reload conf;
-	fi;
-
-	#Flatpak Hardening
-	flatpak override --system --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions -y;
-	flatpak override --user --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions -y;
-	
-	#Stealth Firewall
-	if [ -x /usr/bin/firewall-cmd ]; then
-		echo "${cyan}Hardening Firewall...${coloroff}";
-		firewall-cmd --set-default-zone=drop;
-		#firewall-cmd --add-protocol=icmp --permanent;
-		firewall-cmd --add-protocol=ipv6-icmp --permanent;
-		firewall-cmd --add-service=dhcpv6-client --permanent;
-		firewall-cmd --reload;
-		firewall-cmd --lockdown-on;
-		dnf install firewall-config -y;
 	fi
 
 	#Flatseal
 	echo "${cyan}Installing Flatseal...${coloroff}";
 	flatpak --user install com.github.tchx84.Flatseal -y;
-	flatpak --user override com.github.tchx84.Flatseal --filesystem=/var/lib/flatpak/app:ro --filesystem=xdg-data/flatpak/app:ro --filesystem=xdg-data/flatpak/overrides:create -y;
+	flatpak --user override com.github.tchx84.Flatseal --filesystem=/var/lib/flatpak/app:ro --filesystem=xdg-data/flatpak/app:ro --filesystem=xdg-data/flatpak/overrides:create;
 
 	#hardened_malloc
 	if [ -f /etc/fedora-release ]; then
@@ -258,33 +233,49 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf install hardened_malloc -y;
 		flatpak override --system --filesystem=host-os:ro --env=LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so -y;
 		flatpak override --user --filesystem=host-os:ro --env=LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so -y;
-	fi;
+	fi
 
 	#ClamAV
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Installing ClamAV...${coloroff}";
 		dnf install clamav clamav-freshclam -y;
 		freshclam;
-	fi;
+	fi
+	
+	if [ -f /etc/fedora-release ]; then
+		echo "${cyan}Installing firewall-config...${coloroff}";
+		dnf install firewall-config -y;
+	fi
 
 	#Firejail
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Installing Firejail...${coloroff}";
 		dnf install firejail -y;
 		firecfg;
-	fi;
+	fi
 
 	#GPG
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Installing GnuPG...${coloroff}";
 		dnf install gnupg2 pinentry -y;
-	fi;
+	fi
 
 	#real-ucode
 	if [ -f /etc/fedora-release ]; then
 		echo "${cyan}Installing latest microcodes...${coloroff}";
 		dnf install real-ucode -y;
-	fi;
+	fi
+
+	#Dependencies
+	if [ -f /etc/fedora-release ]; then
+		echo "Installing various important dependencies...";
+		dnf install wget curl -y;
+		dnf install python3 python3-devel -y;
+		dnf install kernel-devel kernel-headers -y;
+		dnf install gcc glibc glibc-devel glibc-headers -y;
+		dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU --allowerasing -y; # Required for ex. DaVinci Resolve
+		dnf install java-1.8.0-openjdk java-1.8.0-openjdk-devel java-11-openjdk java-11-openjdk-devel java-17-openjdk java-17-openjdk-devel java-21-openjdk java-21-openjdk-devel eclipse-jdt -y;
+	fi
 
 	#Services
 	if [ -x /usr/bin/systemctl ]; then
@@ -310,148 +301,133 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	if [ -f /etc/fedora-release ]; then
 		echo "Debloating...";
 		echo "${yellow}This may take a moment....${coloroff}";
-		dnf remove abrt dos2unix evince fedora-bookmarks fedora-chromium-config gnome-connections gnome-remote-desktop gnome-tour gvfs-smb ibus-typing-booster kpartx realmd samba-client sos 'sssd*' texlive-libs totem yelp;
-	fi;
+		dnf remove abrt dos2unix evince fedora-bookmarks fedora-chromium-config gnome-connections gnome-remote-desktop gnome-tour gvfs-smb ibus-typing-booster kpartx realmd samba-client sos 'sssd*' texlive-libs totem yelp -y;
+	fi
 
+	#Flatpak Hardening
+	flatpak override --system --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions;
+	flatpak override --user --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions;
+
+	#Stealth Firewall
+	if [ -x /usr/bin/firewall-cmd ]; then
+		echo "${cyan}Hardening Firewall...${coloroff}";
+		firewall-cmd --set-default-zone=drop;
+		#firewall-cmd --add-protocol=icmp --permanent;
+		firewall-cmd --add-protocol=ipv6-icmp --permanent;
+		firewall-cmd --add-service=dhcpv6-client --permanent;
+		firewall-cmd --reload;
+		firewall-cmd --lockdown-on;
+	fi
+
+	#Hostname
+	if [ -x /usr/bin/hostnamectl ]; then
+		echo "${cyan}Setting generic hostname...${coloroff}";
+		nmcli general reload conf;
+		hostnamectl set-hostname "localhost";
+		hostnamectl --transient hostname '';
+		nmcli general reload conf;
+	fi
+
+	# More Debloating
 	if [ -f /etc/fedora-release ]; then
 		echo "${red}Removing GNOME Calendar...${coloroff}";
 		dnf remove gnome-calendar -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "${red}Removing GNOME Camera...${coloroff}";
 		dnf remove snapshot -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Removing GNOME Contacts...";
 		dnf remove gnome-contacts -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Removing GNOME Maps...";
 		dnf remove gnome-maps -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Removing GNOME Weather...";
 		dnf remove gnome-weather -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Removing Japanese Input Characters (Anthy)...";
-		dnf remove '*anthy*';
-	fi;
+		dnf remove '*anthy*' -y;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Removing Korean Input Characters (Hangul)...";
-		dnf remove '*hangul*';
-	fi;
+		dnf remove '*hangul*' -y;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Removing Mandarin Input Characters (Pinyin)...";
-		dnf remove '*pinyin*';
-	fi;
+		dnf remove '*pinyin*' -y;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Removing Chinese Input Characters (Zhuyin)...";
-		dnf remove '*zhuyin*';
-	fi;
+		dnf remove '*zhuyin*' -y;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Removing Multilingual Input (M17n)...";
-		dnf remove '*m17n*';
-	fi;
-
-	if [ -f /etc/fedora-release ]; then
-		echo "Removing Text-to-Speech Synthesizer...";
-		dnf remove '*speech*';
-	fi;
-
-	#HARMFUL PACKAGES
-	if [ -f /etc/fedora-release ]; then
-		echo "Removing dangerous/harmful packages...";
-		echo "";
-		dnf install remove-retired-packages -y;
-		remove-retired-packages;
-		echo "ClamTK: No longer maintained https://github.com/dave-theunsub/clamtk/issues/163";
-		dnf remove clamtk -y;
-		flatpak uninstall --system com.gitlab.davem.ClamTk -y;
-		flatpak uninstall --user com.gitlab.davem.ClamTk -y;
-		echo "Filezilla: Adware/Spying https://wikipedia.org/wiki/FileZilla#Bundled_adware_issues";
-		dnf remove filezilla -y;
-		flatpak uninstall --system org.filezillaproject.Filezilla -y;
-		flatpak uninstall --user org.filezillaproject.Filezilla -y;
-		echo "Google Chrome: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		dnf remove google-chrome -y;
-		flatpak uninstall --system com.google.chrome com.google.ChromeDev -y;
-		flatpak uninstall --user com.google.chrome com.google.ChromeDev -y;
-		echo "Chromium: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		dnf remove chromium -y;
-		flatpak uninstall --system org.chromium.Chromium -y;
-		flatpak uninstall --user org.chromium.Chromium -y;
-		echo "Microsoft Edge: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		dnf remove microsoft-edge-stable -y;
-		flatpak uninstall --system com.microsoft.Edge com.microsoft.EdgeDev -y;
-		flatpak uninstall --user com.microsoft.Edge com.microsoft.EdgeDev -y;
-		echo "Opera: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		flatpak uninstall --system com.opera.Opera -y;
-		flatpak uninstall --user com.opera.Opera -y;
-		echo "Discord: Spyware, just use within your browser if you NEED to...";
-		dnf remove discord -y;
-		flatpak uninstall --system com.discordapp.Discord -y;
-		flatpak uninstall --user com.discordapp.Discord -y;
-	fi;
+		dnf remove '*m17n*' -y;
+	fi
 
 	# Replacing built-in apps with Flatpaks
 	if [ -f /etc/fedora-release ]; then
 		echo "Replacing GNOME Calculator with Flatpak...";
 		dnf remove gnome-calculator -y;
 		flatpak --user install org.gnome.Calculator -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Replacing GNOME Clocks with Flatpak...";
 		dnf remove gnome-clocks -y;
 		flatpak --user install org.gnome.clocks -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Replacing GNOME Disk Usage Analyzer with Flatpak...";
 		dnf remove baobab -y;
 		flatpak --user install org.gnome.baobab -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Replacing GNOME Document Scanner with Flatpak...";
 		dnf remove simple-scan -y;
 		flatpak --user install org.gnome.SimpleScan -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Replacing GNOME Font Viewer with Flatpak...";
 		dnf remove gnome-font-viewer -y;
 		flatpak --user install org.gnome.font-viewer -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Replacing GNOME Image Viewer with Flatpak...";
 		dnf remove loupe -y;
 		flatpak --user install org.gnome.Loupe -y;
-	fi;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Replacing Fedora Media Writer with Flatpak...";
 		dnf remove mediawriter -y;
 		flatpak --user install org.fedoraproject.MediaWriter -y;
-		flatpak --user override org.fedoraproject.MediaWriter --share=network -y;
-	fi;
+		flatpak --user override org.fedoraproject.MediaWriter --share=network;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Replacing LibreOffice with Flatpak...";
 		dnf remove libreoffice-core -y;
 		flatpak --user install org.libreoffice.LibreOffice -y;
-	fi;
+	fi
 
 	#Codecs
 	if [ -f /etc/fedora-release ]; then
@@ -462,7 +438,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf swap fdk-aac-free fdk-aac --allowerasing -y;
 		dnf swap libavcodec libavcodec-freeworld --allowerasing -y;
 		dnf install libheif libheif-freeworld --allowerasing -y;
-		dnf install gstreamer1-plugins-{bad-\*,good-\*,base} gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel -y;
+		dnf install gstreamer1-plugins-{bad-\*,good-\*,base} gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel -y;
 		dnf install lame\* --exclude=lame-devel -y;
 		dnf config-manager setopt fedora-cisco-openh264.enabled=1 -y;
 		dnf update --refresh -y;
@@ -471,19 +447,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf install install clinfo mesa-libOpenCL pocl -y;
 		dnf install mesa-dri-drivers mesa-va-drivers libva libva-utils -y;
 		dnf install vdpauinfo libvdpau libvdpau-va-gl libdvdcss -y;
-		dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU --allowerasing -y; # Required for ex. DaVinci Resolve
-	fi;
-
-	#Dependencies
-	if [ -f /etc/fedora-release ]; then
-		echo "Installing various important dependencies...";
-		dnf update --refresh -y;
-		dnf install python3 python3-devel -y;
-		dnf install kernel-devel kernel-headers -y;
-		dnf install gcc glibc glibc-devel glibc-headers -y;
-		dnf install libxcrypt-compat libcurl libcurl-devel mesa-libGLU -y;
-		dnf install java-1.8.0-openjdk java-1.8.0-openjdk-devel java-11-openjdk java-11-openjdk-devel java-17-openjdk java-17-openjdk-devel java-21-openjdk java-21-openjdk-devel eclipse-jdt proguard -y;
-	fi;
+		dnf install yt-dlp -y;
+	fi
 
 	if [ -f /etc/fedora-release ]; then
 		echo "Installing Firefox...";
