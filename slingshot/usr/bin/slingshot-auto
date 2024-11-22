@@ -53,7 +53,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 		echo "${red}Cleaning up DNF...${coloroff}";
 		dnf autoremove;
-		dnf clean all -y;
+		dnf clean all;
 
 		echo "${red}Updating DNF Cache...${coloroff}";
 		dnf update --refresh -y;
@@ -63,7 +63,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" -y;
 		dnf install rpmfusion-free-release-tainted -y;
 		dnf install rpmfusion-nonfree-release-tainted -y;
-		dnf config-manager addrepo --from-repofile='https://codeberg.org/divested/divested-release/raw/branch/master/divested-release.repo' -y;
+		wget https://gitlab.com/divested/divested-release/-/jobs/7046900191/artifacts/raw/build/noarch/divested-release-20240607-1.noarch.rpm;
+		dnf install divested-release-20240607-1.noarch.rpm -y;
 		dnf remove fedora-flathub-remote -y;
 
 		echo "${red}Updating DNF Cache...${coloroff}";
@@ -73,8 +74,9 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		flatpak --system update -y;
 		flatpak --user update -y;
 
-		flatpak remote-delete --system flathub -y;
-		flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo -y;
+		flatpak remote-delete --system fedora;
+		flatpak remote-delete --system flathub;
+		flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo;
 
 		echo "${red}Updating Flatpak Cache...${coloroff}";
 		flatpak --system update -y;
@@ -82,7 +84,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 		echo "${red}Cleaning up DNF...${coloroff}";
 		dnf autoremove;
-		dnf clean all -y;
+		dnf clean all;
 
 	elif [ -f /etc/centos-release ]; then
 		yum install epel-release;
@@ -108,22 +110,55 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	if [ -x /usr/bin/fwupdmgr ]; then
 		echo "${cyan}Setting FWUPD to use HTTPS...${coloroff}":
 		echo 'UriSchemes=file;https' | tee -a /etc/fwupd/fwupd.conf;
+		echo "${cyan}Disabling FWUPD's P2P Sharing...${coloroff}":
+		echo 'P2pPolicy=off' | tee -a /etc/fwupd/fwupd.conf;
+
+		echo "${cyan}Disabling FWUPD Telemetry...${coloroff}":
+		sed -i 's/^ReportURI=.*/ReportURI=/' /etc/fwupd/remotes.d/lvfs.conf;
+		sed -i 's/^ReportURI=.*/ReportURI=/' /etc/fwupd/remotes.d/lvfs-testing.conf;
+		sed -i 's/^SecurityReportURI=.*/SecurityReportURI=/' /etc/fwupd/remotes.d/lvfs.conf;
+		sed -i 's/^SecurityReportURI=.*/SecurityReportURI=/' /etc/fwupd/remotes.d/lvfs-testing.conf;
+		sed -i 's/^AutomaticReports=.*/AutomaticReports=false/' /etc/fwupd/remotes.d/lvfs.conf;
+		sed -i 's/^AutomaticReports=.*/AutomaticReports=false/' /etc/fwupd/remotes.d/lvfs-testing.conf;
+		sed -i 's/^AutomaticSecurityReports=.*/AutomaticSecurityReports=false/' /etc/fwupd/remotes.d/lvfs.conf;
+		sed -i 's/^AutomaticSecurityReports=.*/AutomaticSecurityReports=false/' /etc/fwupd/remotes.d/lvfs-testing.conf;
+
+		if ! grep -q '^ReportURI=' /etc/fwupd/remotes.d/lvfs.conf; then
+			echo 'ReportURI=' >> /etc/fwupd/remotes.d/lvfs.conf
+		fi
+
+		if ! grep -q '^ReportURI=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
+			echo 'ReportURI=' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+		fi
+
+		if ! grep -q '^SecurityReportURI=' /etc/fwupd/remotes.d/lvfs.conf; then
+			echo 'SecurityReportURI=' >> /etc/fwupd/remotes.d/lvfs.conf
+		fi;
+
+		if ! grep -q '^SecurityReportURI=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
+			echo 'SecurityReportURI=' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+		fi;
+
+		if ! grep -q '^AutomaticReports=' /etc/fwupd/remotes.d/lvfs.conf; then
+			echo 'AutomaticReports=false' >> /etc/fwupd/remotes.d/lvfs.conf
+		fi
+
+		if ! grep -q '^AutomaticReports=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
+			echo 'AutomaticReports=false' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+		fi
+
+		if ! grep -q '^AutomaticSecurityReports=' /etc/fwupd/remotes.d/lvfs.conf; then
+			echo 'AutomaticSecurityReports=false' >> /etc/fwupd/remotes.d/lvfs.conf
+		fi
+
+		if ! grep -q '^AutomaticSecurityReports=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
+			echo 'AutomaticSecurityReports=false' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+		fi
+
 		systemctl restart fwupd;
 		echo "Updating FWUPD...";
 		fwupdmgr refresh --force;
 		fwupdmgr upgrade;
-	fi
-
-	#Stealth Firewall
-	if [ -x /usr/bin/firewall-cmd ]; then
-		echo "${cyan}Hardening Firewall...${coloroff}";
-		firewall-cmd --set-default-zone=drop;
-		#firewall-cmd --add-protocol=icmp --permanent;
-		firewall-cmd --add-protocol=ipv6-icmp --permanent;
-		firewall-cmd --add-service=dhcpv6-client --permanent;
-		firewall-cmd --reload;
-		firewall-cmd --lockdown-on;
-		dnf install firewall-config -y;
 	fi
 
 	#Kernel Command Line
@@ -200,6 +235,18 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	flatpak override --system --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions -y;
 	flatpak override --user --socket=wayland --nosocket=x11 --nosocket=fallback-x11 --nosocket=pulseaudio --nosocket=session-bus --nosocket=system-bus --unshare=network --unshare=ipc --nofilesystem=host:reset --nofilesystem=host-os --nofilesystem=host-etc --nofilesystem=home --nofilesystem=xdg-run/app/com.discordapp.Discord --nodevice=input --nodevice=shm --nodevice=all --no-talk-name=org.freedesktop.Flatpak --no-talk-name=org.freedesktop.systemd1 --no-talk-name=ca.desrt.dconf --no-talk-name=org.gnome.Shell.Extensions -y;
 	
+	#Stealth Firewall
+	if [ -x /usr/bin/firewall-cmd ]; then
+		echo "${cyan}Hardening Firewall...${coloroff}";
+		firewall-cmd --set-default-zone=drop;
+		#firewall-cmd --add-protocol=icmp --permanent;
+		firewall-cmd --add-protocol=ipv6-icmp --permanent;
+		firewall-cmd --add-service=dhcpv6-client --permanent;
+		firewall-cmd --reload;
+		firewall-cmd --lockdown-on;
+		dnf install firewall-config -y;
+	fi
+
 	#Flatseal
 	echo "${cyan}Installing Flatseal...${coloroff}";
 	flatpak --user install com.github.tchx84.Flatseal -y;

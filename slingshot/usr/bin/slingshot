@@ -110,6 +110,51 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	if [ -x /usr/bin/fwupdmgr ]; then
 		echo "${cyan}Setting FWUPD to use HTTPS...${coloroff}":
 		echo 'UriSchemes=file;https' | tee -a /etc/fwupd/fwupd.conf;
+		echo "${cyan}Disabling FWUPD's P2P Sharing...${coloroff}":
+		echo 'P2pPolicy=off' | tee -a /etc/fwupd/fwupd.conf;
+
+		echo "${cyan}Disabling FWUPD Telemetry...${coloroff}":
+		sed -i 's/^ReportURI=.*/ReportURI=/' /etc/fwupd/remotes.d/lvfs.conf;
+		sed -i 's/^ReportURI=.*/ReportURI=/' /etc/fwupd/remotes.d/lvfs-testing.conf;
+		sed -i 's/^SecurityReportURI=.*/SecurityReportURI=/' /etc/fwupd/remotes.d/lvfs.conf;
+		sed -i 's/^SecurityReportURI=.*/SecurityReportURI=/' /etc/fwupd/remotes.d/lvfs-testing.conf;
+		sed -i 's/^AutomaticReports=.*/AutomaticReports=false/' /etc/fwupd/remotes.d/lvfs.conf;
+		sed -i 's/^AutomaticReports=.*/AutomaticReports=false/' /etc/fwupd/remotes.d/lvfs-testing.conf;
+		sed -i 's/^AutomaticSecurityReports=.*/AutomaticSecurityReports=false/' /etc/fwupd/remotes.d/lvfs.conf;
+		sed -i 's/^AutomaticSecurityReports=.*/AutomaticSecurityReports=false/' /etc/fwupd/remotes.d/lvfs-testing.conf;
+
+		if ! grep -q '^ReportURI=' /etc/fwupd/remotes.d/lvfs.conf; then
+			echo 'ReportURI=' >> /etc/fwupd/remotes.d/lvfs.conf
+		fi
+
+		if ! grep -q '^ReportURI=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
+			echo 'ReportURI=' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+		fi
+
+		if ! grep -q '^SecurityReportURI=' /etc/fwupd/remotes.d/lvfs.conf; then
+			echo 'SecurityReportURI=' >> /etc/fwupd/remotes.d/lvfs.conf
+		fi;
+
+		if ! grep -q '^SecurityReportURI=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
+			echo 'SecurityReportURI=' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+		fi;
+
+		if ! grep -q '^AutomaticReports=' /etc/fwupd/remotes.d/lvfs.conf; then
+			echo 'AutomaticReports=false' >> /etc/fwupd/remotes.d/lvfs.conf
+		fi
+
+		if ! grep -q '^AutomaticReports=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
+			echo 'AutomaticReports=false' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+		fi
+
+		if ! grep -q '^AutomaticSecurityReports=' /etc/fwupd/remotes.d/lvfs.conf; then
+			echo 'AutomaticSecurityReports=false' >> /etc/fwupd/remotes.d/lvfs.conf
+		fi
+
+		if ! grep -q '^AutomaticSecurityReports=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
+			echo 'AutomaticSecurityReports=false' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+		fi
+
 		systemctl restart fwupd;
 		echo "Updating FWUPD...";
 		fwupdmgr refresh --force;
