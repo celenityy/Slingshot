@@ -1,7 +1,7 @@
 # Maintainer: celenity
 pkgname=Slingshot
-pkgver=20241122
-pkgrel=2
+pkgver=20241128
+pkgrel=1
 pkgdesc="At last, the ultimate Linux set-up!"
 arch=('any')
 license=('GPL3')
@@ -50,6 +50,7 @@ package() {
 	install -Dm644 slingshot/usr/lib/systemd/system/rngd.service.d/99-brace.conf "$pkgdir"/usr/lib/systemd/system/rngd.service.d/99-brace.conf;
 	install -Dm644 slingshot/usr/lib/systemd/system/tor.service.d/99-brace.conf "$pkgdir"/usr/lib/systemd/system/tor.service.d/99-brace.conf;
 	install -Dm644 slingshot/usr/lib/systemd/system/wpa_supplicant.service.d/99-brace.conf "$pkgdir"/usr/lib/systemd/system/wpa_supplicant.service.d/99-brace.conf;
+	install -Dm644 slingshot/usr/lib/sysusers.d/android-udev.conf "$pkgdir"/usr/lib/sysusers.d/android-udev.conf;
 	install -Dm644 slingshot/usr/lib/tmpfiles.d/99-brace-proc.conf "$pkgdir"/usr/lib/tmpfiles.d/99-brace-proc.conf;
 	install -Dm644 slingshot/usr/lib/tmpfiles.d/99-slingshot-sys.conf "$pkgdir"/usr/lib/tmpfiles.d/99-slingshot-sys.conf;
 	install -Dm644 slingshot/usr/lib/udev/rules.d/10-trim.rules "$pkgdir"/usr/lib/udev/rules.d/10-trim.rules;

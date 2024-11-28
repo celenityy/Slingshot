@@ -1,6 +1,6 @@
 Name: slingshot
-Version: 20241122
-Release: 2%{?dist}
+Version: 20241128
+Release: 1%{?dist}
 Summary: At last, the ultimate Linux set-up!
 License: AGPLv3+
 URL: https://slingshot.celenity.dev
@@ -67,6 +67,7 @@ install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/system/tor.service.d/99-b
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/system/wpa_supplicant.service.d/99-brace.conf %{buildroot}/usr/lib/systemd/system/wpa_supplicant.service.d/99-brace.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/user/restic-backup@.service %{buildroot}/usr/lib/systemd/user/restic-backup@.service;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/user/restic-backup@.timer %{buildroot}/usr/lib/systemd/user/restic-backup@.timer;
+install -Dm644 %{_sourcedir}/slingshot/usr/lib/sysusers.d/android-udev.conf %{buildroot}/usr/lib/sysusers.d/android-udev.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/tmpfiles.d/99-brace-proc.conf %{buildroot}/usr/lib/tmpfiles.d/99-brace-proc.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/tmpfiles.d/99-slingshot-sys.conf %{buildroot}/usr/lib/tmpfiles.d/99-slingshot-sys.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/udev/rules.d/10-trim.rules %{buildroot}/usr/lib/udev/rules.d/10-trim.rules;
@@ -125,6 +126,7 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/lib/systemd/system/wpa_supplicant.service.d/99-brace.conf
 /usr/lib/systemd/user/restic-backup@.service
 /usr/lib/systemd/user/restic-backup@.timer
+/usr/lib/sysusers.d/android-udev.conf
 /usr/lib/tmpfiles.d/99-brace-proc.conf
 /usr/lib/tmpfiles.d/99-slingshot-sys.conf
 /usr/lib/udev/rules.d/10-trim.rules
