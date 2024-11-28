@@ -379,6 +379,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	#Hostname
 	if [ -x /usr/bin/hostnamectl ]; then
 		echo "${red}Would you like to set a generic hostname? (Recommended, especially for mobile devices)?${coloroff}";
+		select yn in "Yes" "No"; do
 		case $yn in
 				Yes )
 					echo "${cyan}Setting generic hostname...${coloroff}";
