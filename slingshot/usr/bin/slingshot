@@ -59,8 +59,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf update --refresh;
 
 		dnf remove fedora-third-party fedora-workstation-repositories;
-		dnf install "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm";
-		dnf install "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm";
+		dnf install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm";
+		dnf install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm";
 		dnf install rpmfusion-free-release-tainted;
 		dnf install rpmfusion-nonfree-release-tainted;
 		wget https://gitlab.com/divested/divested-release/-/jobs/7046900191/artifacts/raw/build/noarch/divested-release-20240607-1.noarch.rpm;
