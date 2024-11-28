@@ -208,7 +208,8 @@ if [ -f /etc/fedora-release ]; then
 								echo "${red}Installing Android Studio...${coloroff}";
 								flatpak --user install com.google.AndroidStudio;
 								echo "${red}Granting Android Studio necessary permissions...${coloroff}";
-								flatpak --user override com.google.AndroidStudio --device=dri --device=kvm --share=network;
+								mkdir -p ~/ROMs;
+								flatpak --user override com.google.AndroidStudio --device=dri --device=kvm --share=network --filesystem=~/.android;
 								break;;
 							No )
 								break;;
