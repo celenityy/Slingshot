@@ -52,7 +52,7 @@ install -Dm644 %{_sourcedir}/slingshot/usr/lib/NetworkManager/conf.d/30-nm-priva
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/NetworkManager/conf.d/01-transient-hostname.conf %{buildroot}/usr/lib/NetworkManager/conf.d/01-transient-hostname.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/sysctl.d/60-restrict.conf %{buildroot}/usr/lib/sysctl.d/60-restrict.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/resolved.conf.d/brace.conf %{buildroot}/usr/lib/systemd/resolved.conf.d/brace.conf;
-install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/system/chronyd.service.d/99-brace.conf %{buildroot}/usr/lib/systemd/system/chronyd.service.d/99-brace.conf;
+install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/system/chronyd.service.d/99-slingshot.conf %{buildroot}/usr/lib/systemd/system/chronyd.service.d/99-slingshot.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/system/ejabberd.service.d/99-brace.conf %{buildroot}/usr/lib/systemd/system/ejabberd.service.d/99-brace.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/system/httpd.service.d/99-brace.conf %{buildroot}/usr/lib/systemd/system/httpd.service.d/99-brace.conf;
 install -Dm644 %{_sourcedir}/slingshot/usr/lib/systemd/system/irqbalance.service.d/99-brace.conf %{buildroot}/usr/lib/systemd/system/irqbalance.service.d/99-brace.conf;
@@ -111,7 +111,7 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/lib/NetworkManager/conf.d/30-nm-privacy.conf
 /usr/lib/sysctl.d/60-restrict.conf
 /usr/lib/systemd/resolved.conf.d/brace.conf
-/usr/lib/systemd/system/chronyd.service.d/99-brace.conf
+/usr/lib/systemd/system/chronyd.service.d/99-slingshot.conf
 /usr/lib/systemd/system/ejabberd.service.d/99-brace.conf
 /usr/lib/systemd/system/httpd.service.d/99-brace.conf
 /usr/lib/systemd/system/irqbalance.service.d/99-brace.conf

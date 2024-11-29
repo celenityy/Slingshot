@@ -37,7 +37,7 @@ package() {
 	install -Dm644 slingshot/usr/lib/NetworkManager/conf.d/01-transient-hostname.conf "$pkgdir"/usr/lib/NetworkManager/conf.d/01-transient-hostname.conf;
 	install -Dm644 slingshot/usr/lib/sysctl.d/60-restrict.conf "$pkgdir"/usr/lib/sysctl.d/60-restrict.conf;
 	install -Dm644 slingshot/usr/lib/systemd/resolved.conf.d/brace.conf "$pkgdir"/usr/lib/systemd/resolved.conf.d/brace.conf;
-	install -Dm644 slingshot/usr/lib/systemd/system/chronyd.service.d/99-brace.conf "$pkgdir"/usr/lib/systemd/system/chronyd.service.d/99-brace.conf;
+	install -Dm644 slingshot/usr/lib/systemd/system/chronyd.service.d/99-slingshot.conf "$pkgdir"/usr/lib/systemd/system/chronyd.service.d/99-slingshot.conf;
 	install -Dm644 slingshot/usr/lib/systemd/system/ejabberd.service.d/99-brace.conf "$pkgdir"/usr/lib/systemd/system/ejabberd.service.d/99-brace.conf;
 	install -Dm644 slingshot/usr/lib/systemd/system/httpd.service.d/99-brace.conf "$pkgdir"/usr/lib/systemd/system/httpd.service.d/99-brace.conf;
 	install -Dm644 slingshot/usr/lib/systemd/system/irqbalance.service.d/99-brace.conf "$pkgdir"/usr/lib/systemd/system/irqbalance.service.d/99-brace.conf;
