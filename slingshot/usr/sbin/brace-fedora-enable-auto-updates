@@ -14,10 +14,10 @@
 #You should have received a copy of the GNU Affero General Public License
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo 'This script needs to be run as root!'; exit 1; fi;
+if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo -e 'This script needs to be run as root!'; exit 1; fi;
 
 if [ -f /etc/fedora-release ]; then
-	echo "Enabling DNF automatic update download/install";
+	echo -e "Enabling DNF automatic update download/install";
 	dnf install dnf-automatic rpm-plugin-systemd-inhibit;
 	sed -i 's/apply_updates = no/apply_updates = yes/g' /etc/dnf/automatic.conf;
 	if type "dnf5" > /dev/null 2>&1; then
@@ -25,7 +25,7 @@ if [ -f /etc/fedora-release ]; then
 	else
 		systemctl enable dnf-automatic-install.timer --now;
 	fi;
-	echo "Do you want automatic reboots after installing?";
+	echo -e "Do you want automatic reboots after installing?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
@@ -37,5 +37,5 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 else
-	echo "Currently only Fedora is supported";
+	echo -e "Currently only Fedora is supported";
 fi;

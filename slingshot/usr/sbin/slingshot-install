@@ -13,38 +13,38 @@ yellow='\e[0;33m';
 if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo -e "${red}ERROR: This script needs to be run as root!${coloroff}"; exit 1; fi;
 
 if [ -f /etc/fedora-release ]; then
-	echo "${purple}Welcome! This will allow you to easily install high-quality software from different categories.${coloroff}";
-	echo "${purple}Nothing will be installed without your permission. You will be asked for each app.${coloroff}";
-	echo "${purple}If you don't want any apps from a category, you can simply choose no to skip it!${coloroff}";
-	echo "";
+	echo -e "${purple}Welcome! This will allow you to easily install high-quality software from different categories.${coloroff}";
+	echo -e "${purple}Nothing will be installed without your permission. You will be asked for each app.${coloroff}";
+	echo -e "${purple}If you don't want any apps from a category, you can simply choose no to skip it!${coloroff}";
+	echo -e "";
 
-	echo "${red}Cleaning up DNF...${coloroff}";
+	echo -e "${red}Cleaning up DNF...${coloroff}";
 	dnf autoremove;
 	dnf clean all;
 
-	echo "${red}Updating DNF Cache...${coloroff}";
+	echo -e "${red}Updating DNF Cache...${coloroff}";
 	dnf update --refresh;
 
-	echo "${red}Updating Flatpak Cache...${coloroff}";
+	echo -e "${red}Updating Flatpak Cache...${coloroff}";
 	flatpak --system update;
 	flatpak --user update;
 
-	echo "${red}Updating Firejail...${coloroff}";
+	echo -e "${red}Updating Firejail...${coloroff}";
 	firecfg;
 
-	echo "Would you like to install any web browsers?";
+	echo -e "Would you like to install any web browsers?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Firefox? (RPM, Recommended, Preinstalled)";
+				echo -e "Firefox? (RPM, Recommended, Preinstalled)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Updating DNF Cache...${coloroff}";
+								echo -e "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
-								echo "${red}Installing Firefox...${coloroff}";
+								echo -e "${red}Installing Firefox...${coloroff}";
 								dnf install firefox;
-								echo "Harden with Phoenix? https://phoenix.celenity.dev (Recommended)";
+								echo -e "Harden with Phoenix? https://phoenix.celenity.dev (Recommended)";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -59,59 +59,59 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Brave? (RPM)";
+				echo -e "Brave? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Adding Brave's Repository...${coloroff}";
+								echo -e "${red}Adding Brave's Repository...${coloroff}";
 								dnf config-manager addrepo --id=brave-browser --set=name='Brave Browser' --set=baseurl='https://brave-browser-rpm-release.s3.brave.com/$basearch';
 								rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc;
-								echo "${red}Updating DNF Cache...${coloroff}";
+								echo -e "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
-								echo "${red}Installing Brave...${coloroff}";
+								echo -e "${red}Installing Brave...${coloroff}";
 								dnf install brave-browser;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "Hardened Chromium? (RPM)";
+				echo -e "Hardened Chromium? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Adding secureblue's hardened-chromium COPR...${coloroff}";
+								echo -e "${red}Adding secureblue's hardened-chromium COPR...${coloroff}";
 								dnf copr enable secureblue/hardened-chromium;
-								echo "${red}Updating DNF Cache...${coloroff}";
+								echo -e "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
-								echo "${red}Installing Hardened Chromium...${coloroff}";
+								echo -e "${red}Installing Hardened Chromium...${coloroff}";
 								dnf install hardened-chromium;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "Mullvad Browser? (RPM)";
+				echo -e "Mullvad Browser? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Adding Mullvad's Repository...${coloroff}";
+								echo -e "${red}Adding Mullvad's Repository...${coloroff}";
 								dnf config-manager addrepo --from-repofile='https://repository.mullvad.net/rpm/stable/mullvad.repo';
-								echo "${red}Updating DNF Cache...${coloroff}";
+								echo -e "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
-								echo "${red}Installing Mullvad Browser...${coloroff}";
+								echo -e "${red}Installing Mullvad Browser...${coloroff}";
 								dnf install mullvad-browser;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "Tor Browser? (RPM)";
+				echo -e "Tor Browser? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Updating DNF Cache...${coloroff}";
+								echo -e "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
-								echo "${red}Installing Tor Browser...${coloroff}";
+								echo -e "${red}Installing Tor Browser...${coloroff}";
 								dnf install tor torbrowser-launcher;
 								break;;
 							No )
@@ -124,56 +124,56 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install software for Development?";
+	echo -e "Would you like to install software for Development?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Fedora's Recommended Developer Tools? (RPM)";
+				echo -e "Fedora's Recommended Developer Tools? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Updating DNF Cache...${coloroff}";
+								echo -e "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
-								echo "${red}Installing the "Development Tools" group...${coloroff}";
+								echo -e "${red}Installing the "Development Tools" group...${coloroff}";
 								dnf group install development-tools;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "General Development Languages/Support/Dependencies? (RPM)";
+				echo -e "General Development Languages/Support/Dependencies? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Updating DNF Cache...${coloroff}";
+								echo -e "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
-								echo "${red}Installing General Development Languages/Support/Dependencies...${coloroff}";
+								echo -e "${red}Installing General Development Languages/Support/Dependencies...${coloroff}";
 								dnf install cargo cmake coreutils copr-rpmbuild fedpkg git-core make maven mercurial mock pacman perl proguard rpkg rpm-build rpmdevtools rpmlint ruby rust;
 								break;;
 							No )
 								break;;
 						esac
 					done				
-				echo "nano? (RPM)";
+				echo -e "nano? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing nano...${coloroff}";
+								echo -e "${red}Installing nano...${coloroff}";
 								dnf install nano;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "VSCodium? (RPM)";
+				echo -e "VSCodium? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Adding VSCodium's Repository...${coloroff}";
+								echo -e "${red}Adding VSCodium's Repository...${coloroff}";
 								dnf config-manager addrepo --from-repofile='https://slingshot.celenity.dev/vscodium.repo';
-								echo "${red}Updating DNF cache...${coloroff}";
+								echo -e "${red}Updating DNF cache...${coloroff}";
 								dnf update --refresh;
-								echo "${red}Installing VSCodium...${coloroff}";
+								echo -e "${red}Installing VSCodium...${coloroff}";
 								dnf install codium;
 								break;;
 							No )
@@ -186,28 +186,28 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install software for compatibility with Android devices?";
+	echo -e "Would you like to install software for compatibility with Android devices?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "ADB? (RPM)";
+				echo -e "ADB? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing ADB...${coloroff}";
+								echo -e "${red}Installing ADB...${coloroff}";
 								dnf install android-tools;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "Android Studio? (Flatpak)";
+				echo -e "Android Studio? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Android Studio...${coloroff}";
+								echo -e "${red}Installing Android Studio...${coloroff}";
 								flatpak --user install com.google.AndroidStudio;
-								echo "${red}Granting Android Studio necessary permissions...${coloroff}";
+								echo -e "${red}Granting Android Studio necessary permissions...${coloroff}";
 								mkdir -p ~/.android;
 								flatpak --user override com.google.AndroidStudio --device=dri --device=kvm --share=network --filesystem=~/.android;
 								break;;
@@ -215,11 +215,11 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done				
-				echo "enjarify? (RPM)";
+				echo -e "enjarify? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing enjarify...${coloroff}";
+								echo -e "${red}Installing enjarify...${coloroff}";
 								dnf install enjarify;
 								break;;
 							No )
@@ -232,15 +232,15 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install software for virtualization?";
+	echo -e "Would you like to install software for virtualization?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Fedora's Recommended Virtualization Software? (RPM)";
+				echo -e "Fedora's Recommended Virtualization Software? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing the "Virtualization" group...${coloroff}";
+								echo -e "${red}Installing the "Virtualization" group...${coloroff}";
 								dnf group install virtualization --with-optional;
 								break;;
 							No )
@@ -253,18 +253,18 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install software for communication?";
+	echo -e "Would you like to install software for communication?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Signal? (Flatpak, Recommended)";
+				echo -e "Signal? (Flatpak, Recommended)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Signal...${coloroff}";
+								echo -e "${red}Installing Signal...${coloroff}";
 								flatpak --user install org.signal.Signal;
-								echo "${red}Signal will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Signal will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -274,8 +274,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Signal requires access to PulseAudio for audio input & playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Signal requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -285,8 +285,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Signal requires access to your connected devices for sharing your webcam.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Signal requires access to your connected devices for sharing your webcam.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -301,13 +301,13 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Thunderbird? (RPM, Recommended)";
+				echo -e "Thunderbird? (RPM, Recommended)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Thunderbird...${coloroff}";
+								echo -e "${red}Installing Thunderbird...${coloroff}";
 								dnf install thunderbird;
-								echo "Harden with Dove? https://dove.celenity.dev (Recommended)";
+								echo -e "Harden with Dove? https://dove.celenity.dev (Recommended)";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -322,14 +322,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Proton Mail Bridge? (Flatpak)";
+				echo -e "Proton Mail Bridge? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Proton Mail Bridge...${coloroff}";
+								echo -e "${red}Installing Proton Mail Bridge...${coloroff}";
 								flatpak --user install ch.protonmail.protonmail-bridge;
-								echo "${red}Proton Mail Bridge will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Proton Mail Bridge will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -350,20 +350,20 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install software for Finance?";
+	echo -e "Would you like to install software for Finance?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Cake Wallet? (Flatpak)";
+				echo -e "Cake Wallet? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Downloading Cake Wallet...${coloroff}";
+								echo -e "${red}Downloading Cake Wallet...${coloroff}";
 								wget https://github.com/cake-tech/cake_wallet/releases/download/v4.20.1/Cake_Wallet_v4.20.1_Linux.flatpak;
-								echo "${red}Installing Cake Wallet...${coloroff}";
+								echo -e "${red}Installing Cake Wallet...${coloroff}";
 								flatpak --user install Cake_Wallet_v4.20.1_Linux.flatpak;
-								echo "${red}Cake Wallet will not launch with hardened_malloc.${coloroff}";
-								echo "Do you grant it an exception?";
+								echo -e "${red}Cake Wallet will not launch with hardened_malloc.${coloroff}";
+								echo -e "Do you grant it an exception?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -373,8 +373,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Cake Wallet will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Cake Wallet will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -395,20 +395,20 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install software for media consumption?";
+	echo -e "Would you like to install software for media consumption?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "VLC? (Flatpak)";
+				echo -e "VLC? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove vlc;
-								echo "${red}Installing VLC...${coloroff}";
+								echo -e "${red}Installing VLC...${coloroff}";
 								flatpak --user install org.videolan.VLC org.videolan.VLC.Plugin.pause_click org.videolan.VLC.Plugin.fdkaac org.videolan.VLC.Plugin.bdj org.videolan.VLC.Plugin.makemkv;
-								echo "${red}VLC will not launch without access to the X11 windowing system.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}VLC will not launch without access to the X11 windowing system.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -418,8 +418,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}VLC requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}VLC requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -429,8 +429,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}VLC requires direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}VLC requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -440,8 +440,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}VLC requires network access for downloading & updating metadata.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}VLC requires network access for downloading & updating metadata.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -456,16 +456,16 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Lollypop? (Flatpak)";
+				echo -e "Lollypop? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove lollypop;
-								echo "${red}Installing Lollypop...${coloroff}";
+								echo -e "${red}Installing Lollypop...${coloroff}";
 								flatpak --user install org.gnome.Lollypop;
-								echo "${red}Lollypop requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Lollypop requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -475,8 +475,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Lollypop requires network access for downloading & updating metadata.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Lollypop requires network access for downloading & updating metadata.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -491,16 +491,16 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "qBittorrent? (Flatpak)";
+				echo -e "qBittorrent? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove qbittorrent;
-								echo "${red}Installing qBittorrent...${coloroff}";
+								echo -e "${red}Installing qBittorrent...${coloroff}";
 								flatpak --user install org.qbittorrent.qBittorrent;
-								echo "${red}qBittorrent will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}qBittorrent will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -515,16 +515,16 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Kodi? (Flatpak)";
+				echo -e "Kodi? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove kodi;
-								echo "${red}Installing Kodi...${coloroff}";
+								echo -e "${red}Installing Kodi...${coloroff}";
 								flatpak --user install tv.kodi.Kodi;
-								echo "${red}Kodi requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Kodi requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -534,8 +534,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Kodi requires direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Kodi requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -545,8 +545,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Kodi requires network access for remote playback & add-on installation/updates.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Kodi requires network access for remote playback & add-on installation/updates.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -561,14 +561,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "NewPipe? (Flatpak)";
+				echo -e "NewPipe? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing NewPipe..${coloroff}";
+								echo -e "${red}Installing NewPipe..${coloroff}";
 								flatpak --user install net.newpipe.NewPipe;
-								echo "${red}NewPipe will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}NewPipe will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -578,8 +578,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}NewPipe requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}NewPipe requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -589,8 +589,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}NewPipe requires direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}NewPipe requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -605,14 +605,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Jellyfin Media Player? (Flatpak)";
+				echo -e "Jellyfin Media Player? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Jellyfin Media Player...${coloroff}";
+								echo -e "${red}Installing Jellyfin Media Player...${coloroff}";
 								flatpak --user install com.github.iwalton3.jellyfin-media-player;
-								echo "${red}Jellyfin will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Jellyfin will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -622,8 +622,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Jellyfin requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Jellyfin requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -638,14 +638,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Jellyfin MPV Shim? (Flatpak)";
+				echo -e "Jellyfin MPV Shim? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Jellyfin MPV Shim...${coloroff}";
+								echo -e "${red}Installing Jellyfin MPV Shim...${coloroff}";
 								flatpak --user install com.github.iwalton3.jellyfin-mpv-shim;
-								echo "${red}Jellyfin MPV Shim will not launch without access to the X11 windowing system.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Jellyfin MPV Shim will not launch without access to the X11 windowing system.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -655,8 +655,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Jellyfin MPV Shim will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Jellyfin MPV Shim will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -666,8 +666,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Jellyfin MPV Shim requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Jellyfin MPV Shim requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -677,8 +677,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Jellyfin MPV Shim requires direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Jellyfin MPV Shim requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -693,14 +693,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Finamp? (Flatpak)";
+				echo -e "Finamp? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Finamp..${coloroff}";
+								echo -e "${red}Installing Finamp..${coloroff}";
 								flatpak --user install com.unicornsonlsd.finamp;
-								echo "${red}Finamp will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Finamp will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -710,8 +710,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Finamp requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Finamp requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -726,14 +726,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "MakeMKV? (Flatpak)";
+				echo -e "MakeMKV? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing MakeMKV...${coloroff}";
+								echo -e "${red}Installing MakeMKV...${coloroff}";
 								flatpak --user install com.makemkv.MakeMKV;
-								echo "${red}MakeMKV requires access to your connected devices for ripping media from your disk drive.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}MakeMKV requires access to your connected devices for ripping media from your disk drive.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -743,8 +743,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}MakeMKV requires network access for downloading & updating decryption keys.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}MakeMKV requires network access for downloading & updating decryption keys.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -759,14 +759,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Asunder? (Flatpak)";
+				echo -e "Asunder? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Asunder...${coloroff}";
+								echo -e "${red}Installing Asunder...${coloroff}";
 								flatpak --user install ca.littlesvr.asunder;
-								echo "${red}Asunder will not launch without access to the X11 windowing system.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Asunder will not launch without access to the X11 windowing system.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -776,8 +776,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Asunder requires access to your connected devices for ripping media from your disk drive.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Asunder requires access to your connected devices for ripping media from your disk drive.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -787,8 +787,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Asunder requires network access for downloading & updating metadata.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Asunder requires network access for downloading & updating metadata.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -798,10 +798,10 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Asunder requires access to a directory on your system for saving media.${coloroff}";
-								echo "By default, we can grant it access to its own folder located at ~/Music/Asunder";
-								echo "${red}Make sure to set this as your destination folder in Asunder's "General" Preferences!${coloroff}";
-								echo "Do you accept this?";
+								echo -e "${red}Asunder requires access to a directory on your system for saving media.${coloroff}";
+								echo -e "By default, we can grant it access to its own folder located at ~/Music/Asunder";
+								echo -e "${red}Make sure to set this as your destination folder in Asunder's "General" Preferences!${coloroff}";
+								echo -e "Do you accept this?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -823,20 +823,20 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install software for content creation?";
+	echo -e "Would you like to install software for content creation?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Audacity? (Flatpak)";
+				echo -e "Audacity? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove audacity audacity-freeworld;
-								echo "${red}Installing Audacity...${coloroff}";
+								echo -e "${red}Installing Audacity...${coloroff}";
 								flatpak --user install org.audacityteam.Audacity;
-								echo "${red}Audacity requires access to PulseAudio for audio input & playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Audacity requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -851,16 +851,16 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "GIMP? (Flatpak)";
+				echo -e "GIMP? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove gimp;
-								echo "${red}Installing GIMP...${coloroff}";
+								echo -e "${red}Installing GIMP...${coloroff}";
 								flatpak --user install org.gimp.GIMP;
-								echo "${red}GIMP will not launch without access to the X11 windowing system.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}GIMP will not launch without access to the X11 windowing system.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -875,42 +875,42 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Inkscape? (Flatpak)";
+				echo -e "Inkscape? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove inkscape;
-								echo "${red}Installing Inkscape...${coloroff}";
+								echo -e "${red}Installing Inkscape...${coloroff}";
 								flatpak --user install org.inkscape.Inkscape;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "Tux Paint? (Flatpak)";
+				echo -e "Tux Paint? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove tuxpaint;
-								echo "${red}Installing Tux Paint...${coloroff}";
+								echo -e "${red}Installing Tux Paint...${coloroff}";
 								flatpak --user install org.tuxpaint.Tuxpaint;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "HandBrake? (Flatpak)";
+				echo -e "HandBrake? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove handbrake;
-								echo "${red}Installing HandBrake...${coloroff}";
+								echo -e "${red}Installing HandBrake...${coloroff}";
 								flatpak --user install fr.handbrake.ghb;
-								echo "${red}HandBrake requires direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}HandBrake requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -925,16 +925,16 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Kdenlive? (Flatpak)";
+				echo -e "Kdenlive? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove kdenlive;
-								echo "${red}Installing Kdenlive...${coloroff}";
+								echo -e "${red}Installing Kdenlive...${coloroff}";
 								flatpak --user install org.kde.kdenlive;
-								echo "${red}Kdenlive requires direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Kdenlive requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -944,8 +944,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Kdenlive requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Kdenlive requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -960,16 +960,16 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done		
-				echo "OBS? (Flatpak)";
+				echo -e "OBS? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove obs-studio;
-								echo "${red}Installing OBS...${coloroff}";
+								echo -e "${red}Installing OBS...${coloroff}";
 								flatpak --user install com.obsproject.Studio com.obsproject.Studio.Plugin.InputOverlay com.obsproject.Studio.Plugin.Gstreamer com.obsproject.Studio.Plugin.GStreamerVaapi com.obsproject.Studio.Plugin.CompositeBlur com.obsproject.Studio.Plugin.BackgroundRemoval;
-								echo "${red}OBS requires direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}OBS requires direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -979,8 +979,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}OBS requires access to PulseAudio for audio input & playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}OBS requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -990,8 +990,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}OBS requires access to your connected devices for recording via your webcam.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}OBS requires access to your connected devices for recording via your webcam.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1001,8 +1001,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}OBS requires network access for streaming to online services.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}OBS requires network access for streaming to online services.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1023,20 +1023,20 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install software for Gaming?";
+	echo -e "Would you like to install software for Gaming?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Steam? (Flatpak)";
+				echo -e "Steam? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove steam;
-								echo "${red}Installing Steam...${coloroff}";
+								echo -e "${red}Installing Steam...${coloroff}";
 								flatpak --user install com.valvesoftware.Steam com.valvesoftware.Steam.Utility.steamtinkerlaunch com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.valvesoftware.Steam.Utility.InhibitScreensaver;
-								echo "${red}Steam will not launch without access to the X11 windowing system.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Steam will not launch without access to the X11 windowing system.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1046,8 +1046,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Steam will not launch with hardened_malloc.${coloroff}";
-								echo "Do you grant it an exception?";
+								echo -e "${red}Steam will not launch with hardened_malloc.${coloroff}";
+								echo -e "Do you grant it an exception?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1057,8 +1057,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Steam will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Steam will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1068,8 +1068,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Steam requires access to PulseAudio for audio input & playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Steam requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1079,8 +1079,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Games will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Games will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1095,16 +1095,16 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Lutris? (Flatpak)";
+				echo -e "Lutris? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove lutris;
-								echo "${red}Installing Lutris...${coloroff}";
+								echo -e "${red}Installing Lutris...${coloroff}";
 								flatpak --user install net.lutris.Lutris;
-								echo "${red}Lutris will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Lutris will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1114,8 +1114,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Lutris requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Lutris requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1125,8 +1125,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Games will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Games will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1141,14 +1141,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Prism Launcher? (Minecraft, Flatpak)";
+				echo -e "Prism Launcher? (Minecraft, Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Prism Launcher...${coloroff}";
+								echo -e "${red}Installing Prism Launcher...${coloroff}";
 								flatpak --user install org.prismlauncher.PrismLauncher;
-								echo "${red}Prism Launcher will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Prism Launcher will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1158,8 +1158,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Prism Launcher requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Prism Launcher requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1169,8 +1169,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Prism Launcher will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Prism Launcher will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1185,14 +1185,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Sober? (Roblox, Flatpak)";
+				echo -e "Sober? (Roblox, Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Sober...${coloroff}";
+								echo -e "${red}Installing Sober...${coloroff}";
 								flatpak --user install https://sober.vinegarhq.org/sober.flatpakref;
-								echo "${red}Sober will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Sober will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1202,8 +1202,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Sober requires access to PulseAudio for audio input & playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Sober requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1213,8 +1213,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Sober will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Sober will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1229,14 +1229,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Luanti? (Minetest, Flatpak)";
+				echo -e "Luanti? (Minetest, Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Luanti...${coloroff}";
+								echo -e "${red}Installing Luanti...${coloroff}";
 								flatpak --user install net.minetest.Minetest;
-								echo "${red}Luanti will not launch without access to the X11 windowing system.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Luanti will not launch without access to the X11 windowing system.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1246,8 +1246,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Luanti will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Luanti will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1257,8 +1257,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Luanti requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Luanti requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1268,8 +1268,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Luanti will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Luanti will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1284,14 +1284,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "SuperTuxKart? (Flatpak)";
+				echo -e "SuperTuxKart? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing SuperTuxKart...${coloroff}";
+								echo -e "${red}Installing SuperTuxKart...${coloroff}";
 								flatpak --user install net.supertuxkart.SuperTuxKart;
-								echo "${red}SuperTuxKart requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}SuperTuxKart requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1301,8 +1301,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}SuperTuxKart will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}SuperTuxKart will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1312,8 +1312,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}SuperTuxKart requires network access for online multiplayer & downloading add-ons.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}SuperTuxKart requires network access for online multiplayer & downloading add-ons.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1334,16 +1334,16 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install software for compatibility with Windows Software?";
-	echo "Recommended for Gaming!";
+	echo -e "Would you like to install software for compatibility with Windows Software?";
+	echo -e "Recommended for Gaming!";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "WINE? (RPM)";
+				echo -e "WINE? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing WINE...${coloroff}";
+								echo -e "${red}Installing WINE...${coloroff}";
 								dnf install wine;
 								dnf install winetricks;
 								break;;
@@ -1351,14 +1351,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Bottles? (Flatpak)";
+				echo -e "Bottles? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Bottles...${coloroff}";
+								echo -e "${red}Installing Bottles...${coloroff}";
 								flatpak --user install com.usebottles.bottles;
-								echo "${red}Bottles will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Bottles will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1368,8 +1368,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Bottles requires access to PulseAudio for audio input & playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Bottles requires access to PulseAudio for audio input & playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1379,8 +1379,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Software will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Software will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1395,25 +1395,25 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Protontricks? (Flatpak)";
+				echo -e "Protontricks? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Protontricks...${coloroff}";
+								echo -e "${red}Installing Protontricks...${coloroff}";
 								flatpak --user install com.github.Matoking.protontricks;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "ProtonUp-Qt? (Flatpak)";
+				echo -e "ProtonUp-Qt? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing ProtonUp-Qt...${coloroff}";
+								echo -e "${red}Installing ProtonUp-Qt...${coloroff}";
 								flatpak --user install net.davidotek.pupgui2;
-								echo "${red}ProtonUp-Qt will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}ProtonUp-Qt will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1434,18 +1434,18 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install any Emulators?";
+	echo -e "Would you like to install any Emulators?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "RetroArch? (Flatpak)";
+				echo -e "RetroArch? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing RetroArch...${coloroff}";
+								echo -e "${red}Installing RetroArch...${coloroff}";
 								flatpak --user install org.libretro.RetroArch;
-								echo "${red}RetroArch will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}RetroArch will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1455,8 +1455,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}RetroArch requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}RetroArch requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1466,8 +1466,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}RetroArch will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}RetroArch will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1477,9 +1477,9 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}RetroArch requires access to a directory on your system for scanning & playing ROMs.${coloroff}";
-								echo "By default, we can grant it read-only access to ~/ROMs";
-								echo "Do you accept this?";
+								echo -e "${red}RetroArch requires access to a directory on your system for scanning & playing ROMs.${coloroff}";
+								echo -e "By default, we can grant it read-only access to ~/ROMs";
+								echo -e "Do you accept this?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1495,14 +1495,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "Dolphin? (GameCube/Wii, Flatpak)";
+				echo -e "Dolphin? (GameCube/Wii, Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Dolphin...${coloroff}";
+								echo -e "${red}Installing Dolphin...${coloroff}";
 								flatpak --user install org.DolphinEmu.dolphin-emu;
-								echo "${red}Dolphin will not launch without access to the X11 windowing system.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Dolphin will not launch without access to the X11 windowing system.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1512,8 +1512,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Dolphin will not launch with hardened_malloc.${coloroff}";
-								echo "Do you grant it an exception?";
+								echo -e "${red}Dolphin will not launch with hardened_malloc.${coloroff}";
+								echo -e "Do you grant it an exception?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1523,8 +1523,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Dolphin requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Dolphin requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1534,8 +1534,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Dolphin will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Dolphin will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1545,8 +1545,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Dolphin requires network access for online multiplayer & other functionality.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Dolphin requires network access for online multiplayer & other functionality.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1561,14 +1561,14 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "PPSSPP? (PSP, Flatpak)";
+				echo -e "PPSSPP? (PSP, Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing PPSSPP...${coloroff}";
+								echo -e "${red}Installing PPSSPP...${coloroff}";
 								flatpak --user install org.ppsspp.PPSSPP;
-								echo "${red}PPSSPP will not launch without access to the X11 windowing system.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}PPSSPP will not launch without access to the X11 windowing system.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1578,8 +1578,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}PPSSPP requires access to PulseAudio for audio playback.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}PPSSPP requires access to PulseAudio for audio playback.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1589,8 +1589,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}PPSSPP will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}PPSSPP will perform poorly without direct access to your GPU for hardware acceleration.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1600,8 +1600,8 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}PPSSPP requires network access for online multiplayer.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}PPSSPP requires network access for online multiplayer.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1611,9 +1611,9 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}PPSSPP requires access to a directory on your system for scanning & playing ROMs.${coloroff}";
-								echo "By default, we can grant it read-only access to ~/ROMs";
-								echo "Do you accept this?";
+								echo -e "${red}PPSSPP requires access to a directory on your system for scanning & playing ROMs.${coloroff}";
+								echo -e "By default, we can grant it read-only access to ~/ROMs";
+								echo -e "Do you accept this?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1635,48 +1635,48 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install a VPN?";
+	echo -e "Would you like to install a VPN?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "IVPN? (RPM)";
+				echo -e "IVPN? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Adding IVPN's Repository...${coloroff}";
+								echo -e "${red}Adding IVPN's Repository...${coloroff}";
 								dnf config-manager addrepo --from-repofile='https://repo.ivpn.net/stable/fedora/generic/ivpn.repo';
-								echo "${red}Updating DNF Cache...${coloroff}";
+								echo -e "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
-								echo "${red}Installing IVPN...${coloroff}";
+								echo -e "${red}Installing IVPN...${coloroff}";
 								dnf install ivpn ivpn-ui;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "Mullvad? (RPM)";
+				echo -e "Mullvad? (RPM)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Adding Mullvad's Repository...${coloroff}";
+								echo -e "${red}Adding Mullvad's Repository...${coloroff}";
 								dnf config-manager addrepo --from-repofile='https://repository.mullvad.net/rpm/stable/mullvad.repo';
-								echo "${red}Updating DNF Cache...${coloroff}";
+								echo -e "${red}Updating DNF Cache...${coloroff}";
 								dnf update --refresh;
-								echo "${red}Installing Mullvad...${coloroff}";
+								echo -e "${red}Installing Mullvad...${coloroff}";
 								dnf install mullvad-vpn;
 								break;;
 							No )
 								break;;
 						esac
 					done
-				echo "ProtonVPN? (Flatpak)";
+				echo -e "ProtonVPN? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing ProtonVPN...${coloroff}";
+								echo -e "${red}Installing ProtonVPN...${coloroff}";
 								flatpak --user install com.protonvpn.www;
-								echo "${red}ProtonVPN will not function without network access.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}ProtonVPN will not function without network access.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1697,18 +1697,18 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "Would you like to install software for productivity?";
+	echo -e "Would you like to install software for productivity?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
-				echo "Obsidian? (Flatpak)";
+				echo -e "Obsidian? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Obsidian...${coloroff}";
+								echo -e "${red}Installing Obsidian...${coloroff}";
 								flatpak --user install md.obsidian.Obsidian;
-								echo "${red}Obsidian requires network access for Sync & add-on installation/updates..${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}Obsidian requires network access for Sync & add-on installation/updates..${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1718,10 +1718,10 @@ if [ -f /etc/fedora-release ]; then
 											break;;
 										esac
 									done
-								echo "${red}Obsidian requires access to a directory on your system for saving notes.${coloroff}";
-								echo "By default, we can grant it access to its own folder located at ~/Documents/Obsidian";
-								echo "${red}Make sure to set this as your vault location during Obsidian's Set-up!${coloroff}";
-								echo "Do you accept this?";
+								echo -e "${red}Obsidian requires access to a directory on your system for saving notes.${coloroff}";
+								echo -e "By default, we can grant it access to its own folder located at ~/Documents/Obsidian";
+								echo -e "${red}Make sure to set this as your vault location during Obsidian's Set-up!${coloroff}";
+								echo -e "Do you accept this?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1737,27 +1737,27 @@ if [ -f /etc/fedora-release ]; then
 								break;;
 						esac
 					done
-				echo "LibreOffice? (Flatpak)";
+				echo -e "LibreOffice? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Removing RPM if already installed...${coloroff}";
+								echo -e "${red}Removing RPM if already installed...${coloroff}";
 								dnf remove libreoffice-core;
-								echo "${red}Installing LibreOffice..${coloroff}";
+								echo -e "${red}Installing LibreOffice..${coloroff}";
 								flatpak --user install org.libreoffice.LibreOffice;
 								break;;
 							No )
 								break;;
 						esac
 					done								
-				echo "OnlyOffice? (Flatpak)";
+				echo -e "OnlyOffice? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing OnlyOffice...${coloroff}";
+								echo -e "${red}Installing OnlyOffice...${coloroff}";
 								flatpak --user install org.onlyoffice.desktopeditors;
-								echo "${red}OnlyOffice will not launch without access to the X11 windowing system.${coloroff}";
-								echo "Do you grant this permission?";
+								echo -e "${red}OnlyOffice will not launch without access to the X11 windowing system.${coloroff}";
+								echo -e "Do you grant this permission?";
 								select yn in "Yes" "No"; do
 									case $yn in
 										Yes )
@@ -1778,18 +1778,18 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 
-	echo "${red}Cleaning up DNF...${coloroff}";
+	echo -e "${red}Cleaning up DNF...${coloroff}";
 	dnf autoremove;
 	dnf clean all;
 
-	echo "${red}Updating DNF Cache...${coloroff}";
+	echo -e "${red}Updating DNF Cache...${coloroff}";
 	dnf update --refresh;
 
-	echo "${red}Updating Flatpak Cache...${coloroff}";
+	echo -e "${red}Updating Flatpak Cache...${coloroff}";
 	flatpak --system update;
 	flatpak --user update;
 
-	echo "${red}Updating Firejail...${coloroff}";
+	echo -e "${red}Updating Firejail...${coloroff}";
 	firecfg;
 
 fi;

@@ -14,12 +14,12 @@
 #You should have received a copy of the GNU Affero General Public License
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo 'This script needs to be run as root!'; exit 1; fi;
+if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo -e 'This script needs to be run as root!'; exit 1; fi;
 
 if [ -f /etc/fedora-release ]; then
-	echo "Installing fapolicyd";
+	echo -e "Installing fapolicyd";
 	dnf install fapolicyd;
-	echo "Do you want strict integrity verification? 3rd party packages are often incompatible.";
+	echo -e "Do you want strict integrity verification? 3rd party packages are often incompatible.";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
@@ -31,9 +31,9 @@ if [ -f /etc/fedora-release ]; then
 		esac
 	done
 	sed -i 's/deny_audit/deny_log/' /etc/fapolicyd/rules.d/*.rules; #log to journald too
-	echo "Enabling fapolicyd";
+	echo -e "Enabling fapolicyd";
 	systemctl enable fapolicyd --now;
 	systemctl status fapolicyd;
 else
-	echo "Currently only Fedora is supported";
+	echo -e "Currently only Fedora is supported";
 fi;

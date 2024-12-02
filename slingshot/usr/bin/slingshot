@@ -26,36 +26,36 @@ yellow='\e[0;33m';
 
 if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	if [ -f "/usr/lib/systemd/system/zram-swap.service" ]; then
-		echo "Enabling zram-swap";
+		echo -e "Enabling zram-swap";
 		systemctl enable zram-swap.service --now; #XXX: replaced by systemd-zram-generator
 	fi;
 
 	if [ -f "/usr/lib/systemd/system/fstrim.timer" ]; then
-		echo "Enabling weekly fstrim";
+		echo -e "Enabling weekly fstrim";
 		systemctl enable fstrim.timer --now;
 	fi
 
 	#Repos
 	if [ -f /etc/fedora-release ] || [ -f /etc/centos-release ]; then
-		echo "${cyan}Enabling RPM Fusion, Divested RPM, & replacing system Flathub with user Flathub...${coloroff}";
-		echo "${red}Please verify the RPM Fusion signing keys from here: https://rpmfusion.org/keys${coloroff}";
-		echo "Free - F33-41: ${yellow}E9A4 91A3 DE24 7814 E7E0 67EA E06F 8ECD D651 FF2E${coloroff}";
-		echo "Free - EL9: ${yellow}EDC0 0FE7 418C 9DF7 EF49  91A4 7403 EA33 2964 58F3${coloroff}";
-		echo "Free - EL8: ${yellow}8379 35CD 19E1 23AA 7F8A  8E69 979F 0C69 158B 3811${coloroff}";
-		echo "Free - EL7: ${yellow}DB9A 9A57 CAFD 23DA 3A88  792F 758B 3D18 F5CF 6C1E${coloroff}";
-		echo "Nonfree - ${yellow}F33-41: 79BD B88F 9BBF 7391 0FD4 095B 6A2A F961 9484 3C65${coloroff}";
-		echo "Nonfree - ${yellow}EL9: BB24 128A 4BB3 C335 2C0B  75A2 E417 4E6B AAB2 12EA${coloroff}";
-		echo "Nonfree - ${yellow}EL8: CF9F D59F 61D6 6121 46CD AC8E 14B6 792D BDDA 8475${coloroff}";
-		echo "Nonfree - ${yellow}EL7: C3FA F3A9 6B39 8583 91ED  D8D9 C8F7 6DF1 A310 8F6C${coloroff}";
+		echo -e "${cyan}Enabling RPM Fusion, Divested RPM, & replacing system Flathub with user Flathub...${coloroff}";
+		echo -e "${red}Please verify the RPM Fusion signing keys from here: https://rpmfusion.org/keys${coloroff}";
+		echo -e "Free - F33-41: ${yellow}E9A4 91A3 DE24 7814 E7E0 67EA E06F 8ECD D651 FF2E${coloroff}";
+		echo -e "Free - EL9: ${yellow}EDC0 0FE7 418C 9DF7 EF49  91A4 7403 EA33 2964 58F3${coloroff}";
+		echo -e "Free - EL8: ${yellow}8379 35CD 19E1 23AA 7F8A  8E69 979F 0C69 158B 3811${coloroff}";
+		echo -e "Free - EL7: ${yellow}DB9A 9A57 CAFD 23DA 3A88  792F 758B 3D18 F5CF 6C1E${coloroff}";
+		echo -e "Nonfree - ${yellow}F33-41: 79BD B88F 9BBF 7391 0FD4 095B 6A2A F961 9484 3C65${coloroff}";
+		echo -e "Nonfree - ${yellow}EL9: BB24 128A 4BB3 C335 2C0B  75A2 E417 4E6B AAB2 12EA${coloroff}";
+		echo -e "Nonfree - ${yellow}EL8: CF9F D59F 61D6 6121 46CD AC8E 14B6 792D BDDA 8475${coloroff}";
+		echo -e "Nonfree - ${yellow}EL7: C3FA F3A9 6B39 8583 91ED  D8D9 C8F7 6DF1 A310 8F6C${coloroff}";
 	fi
 
 	if [ -f /etc/fedora-release ]; then
 
-		echo "${red}Cleaning up DNF...${coloroff}";
+		echo -e "${red}Cleaning up DNF...${coloroff}";
 		dnf autoremove;
 		dnf clean all;
 
-		echo "${red}Updating DNF Cache...${coloroff}";
+		echo -e "${red}Updating DNF Cache...${coloroff}";
 		dnf update --refresh;
 
 		dnf remove fedora-third-party fedora-workstation-repositories;
@@ -67,10 +67,10 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf install divested-release-20240607-1.noarch.rpm;
 		dnf remove fedora-flathub-remote;
 
-		echo "${red}Updating DNF Cache...${coloroff}";
+		echo -e "${red}Updating DNF Cache...${coloroff}";
 		dnf update --refresh;
 
-		echo "${red}Updating Flatpak Cache...${coloroff}";
+		echo -e "${red}Updating Flatpak Cache...${coloroff}";
 		flatpak --system update;
 		flatpak --user update;
 
@@ -78,11 +78,11 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		flatpak remote-delete --system flathub;
 		flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo;
 
-		echo "${red}Updating Flatpak Cache...${coloroff}";
+		echo -e "${red}Updating Flatpak Cache...${coloroff}";
 		flatpak --system update;
 		flatpak --user update;
 
-		echo "${red}Cleaning up DNF...${coloroff}";
+		echo -e "${red}Cleaning up DNF...${coloroff}";
 		dnf autoremove;
 		dnf clean all;
 
@@ -93,27 +93,27 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi
 
 	if [ -d "/etc/yum.repos.d" ]; then
-		echo "${cyan}Setting DNF repos to use HTTPS...${coloroff}";
+		echo -e "${cyan}Setting DNF repos to use HTTPS...${coloroff}";
 		sed -i 's/metalink?repo=/metalink\?protocol\=https\&repo\=/' /etc/yum.repos.d/*.repo;
 
-		echo "Remember: This will need to be done again if any of them are updated!";
+		echo -e "Remember: This will need to be done again if any of them are updated!";
 
-		echo "${cyan}Disabling DNF countme...${coloroff}";
+		echo -e "${cyan}Disabling DNF countme...${coloroff}";
 		sed -i 's/countme=1/countme=0/' /etc/yum.repos.d/*.repo;
 		sed -i '$a countme=False' /etc/dnf/dnf.conf;
 
-		echo "Speeding up DNF...";
+		echo -e "Speeding up DNF...";
 		sed -i '$a max_parallel_downloads=10' /etc/dnf/dnf.conf;
 	fi
 
 	#FWUPD
 	if [ -x /usr/bin/fwupdmgr ]; then
-		echo "${cyan}Setting FWUPD to use HTTPS...${coloroff}":
-		echo 'UriSchemes=file;https' | tee -a /etc/fwupd/fwupd.conf;
-		echo "${cyan}Disabling FWUPD's P2P Sharing...${coloroff}":
-		echo 'P2pPolicy=off' | tee -a /etc/fwupd/fwupd.conf;
+		echo -e "${cyan}Setting FWUPD to use HTTPS...${coloroff}":
+		echo -e 'UriSchemes=file;https' | tee -a /etc/fwupd/fwupd.conf;
+		echo -e "${cyan}Disabling FWUPD's P2P Sharing...${coloroff}":
+		echo -e 'P2pPolicy=off' | tee -a /etc/fwupd/fwupd.conf;
 
-		echo "${cyan}Disabling FWUPD Telemetry...${coloroff}":
+		echo -e "${cyan}Disabling FWUPD Telemetry...${coloroff}":
 		sed -i 's/^ReportURI=.*/ReportURI=/' /etc/fwupd/remotes.d/lvfs.conf;
 		sed -i 's/^ReportURI=.*/ReportURI=/' /etc/fwupd/remotes.d/lvfs-testing.conf;
 		sed -i 's/^SecurityReportURI=.*/SecurityReportURI=/' /etc/fwupd/remotes.d/lvfs.conf;
@@ -124,47 +124,47 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		sed -i 's/^AutomaticSecurityReports=.*/AutomaticSecurityReports=false/' /etc/fwupd/remotes.d/lvfs-testing.conf;
 
 		if ! grep -q '^ReportURI=' /etc/fwupd/remotes.d/lvfs.conf; then
-			echo 'ReportURI=' >> /etc/fwupd/remotes.d/lvfs.conf
+			echo -e 'ReportURI=' >> /etc/fwupd/remotes.d/lvfs.conf
 		fi
 
 		if ! grep -q '^ReportURI=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
-			echo 'ReportURI=' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+			echo -e 'ReportURI=' >> /etc/fwupd/remotes.d/lvfs-testing.conf
 		fi
 
 		if ! grep -q '^SecurityReportURI=' /etc/fwupd/remotes.d/lvfs.conf; then
-			echo 'SecurityReportURI=' >> /etc/fwupd/remotes.d/lvfs.conf
+			echo -e 'SecurityReportURI=' >> /etc/fwupd/remotes.d/lvfs.conf
 		fi;
 
 		if ! grep -q '^SecurityReportURI=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
-			echo 'SecurityReportURI=' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+			echo -e 'SecurityReportURI=' >> /etc/fwupd/remotes.d/lvfs-testing.conf
 		fi;
 
 		if ! grep -q '^AutomaticReports=' /etc/fwupd/remotes.d/lvfs.conf; then
-			echo 'AutomaticReports=false' >> /etc/fwupd/remotes.d/lvfs.conf
+			echo -e 'AutomaticReports=false' >> /etc/fwupd/remotes.d/lvfs.conf
 		fi
 
 		if ! grep -q '^AutomaticReports=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
-			echo 'AutomaticReports=false' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+			echo -e 'AutomaticReports=false' >> /etc/fwupd/remotes.d/lvfs-testing.conf
 		fi
 
 		if ! grep -q '^AutomaticSecurityReports=' /etc/fwupd/remotes.d/lvfs.conf; then
-			echo 'AutomaticSecurityReports=false' >> /etc/fwupd/remotes.d/lvfs.conf
+			echo -e 'AutomaticSecurityReports=false' >> /etc/fwupd/remotes.d/lvfs.conf
 		fi
 
 		if ! grep -q '^AutomaticSecurityReports=' /etc/fwupd/remotes.d/lvfs-testing.conf; then
-			echo 'AutomaticSecurityReports=false' >> /etc/fwupd/remotes.d/lvfs-testing.conf
+			echo -e 'AutomaticSecurityReports=false' >> /etc/fwupd/remotes.d/lvfs-testing.conf
 		fi
 
 		systemctl restart fwupd;
-		echo "Updating FWUPD...";
+		echo -e "Updating FWUPD...";
 		fwupdmgr refresh --force;
 		fwupdmgr upgrade;
 	fi
 
 	#Kernel Command Line
 	if [ -x /usr/sbin/grubby ]; then
-		echo "${cyan}Hardening Kernel...${coloroff}";
-		echo "${yellow}This may take a moment....${coloroff}";
+		echo -e "${cyan}Hardening Kernel...${coloroff}";
+		echo -e "${yellow}This may take a moment....${coloroff}";
 
 		#Memory Hardening
 		#grubby --update-kernel=ALL --args="mem_encrypt=on"; #Enables SME on supported AMD platforms #XXX: can break boot, usually doesn't work but TSME in UEFI may
@@ -212,24 +212,24 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#Stronger Crypto
 	if [ -x /usr/bin/update-crypto-policies ]; then
-		echo "${cyan}Hardening crypto policies...${coloroff}";
+		echo -e "${cyan}Hardening crypto policies...${coloroff}";
 		update-crypto-policies --set NEXT;
 	fi
 
 	#nullok https://networklogician.com/2021/04/11/disable-null-passwords/
 	if [ -f /etc/fedora-release ]; then
-		echo "${cyan}Disabling null/empty passwords...${coloroff}";
+		echo -e "${cyan}Disabling null/empty passwords...${coloroff}";
 		/usr/bin/sed -i 's/\s+nullok//g' /etc/pam.d/system-auth;
 	fi
 	
 	#Flatseal
-	echo "${cyan}Installing Flatseal...${coloroff}";
+	echo -e "${cyan}Installing Flatseal...${coloroff}";
 	flatpak --user install com.github.tchx84.Flatseal;
 	flatpak --user override com.github.tchx84.Flatseal --filesystem=/var/lib/flatpak/app:ro --filesystem=xdg-data/flatpak/app:ro --filesystem=xdg-data/flatpak/overrides:create;
 
 	#hardened_malloc
 	if [ -f /etc/fedora-release ]; then
-		echo "${cyan}Installing & configuring hardened memory allocator...${coloroff}";
+		echo -e "${cyan}Installing & configuring hardened memory allocator...${coloroff}";
 		dnf install hardened_malloc;
 		flatpak override --system --filesystem=host-os:ro --env=LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so;
 		flatpak override --user --filesystem=host-os:ro --env=LD_PRELOAD=/var/run/host/usr/lib64/libhardened_malloc.so;
@@ -237,38 +237,38 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#ClamAV
 	if [ -f /etc/fedora-release ]; then
-		echo "${cyan}Installing ClamAV...${coloroff}";
+		echo -e "${cyan}Installing ClamAV...${coloroff}";
 		dnf install clamav clamav-freshclam;
 		freshclam;
 	fi
 
 	if [ -f /etc/fedora-release ]; then
-		echo "${cyan}Installing firewall-config...${coloroff}";
+		echo -e "${cyan}Installing firewall-config...${coloroff}";
 		dnf install firewall-config;
 	fi
 
 	#Firejail
 	if [ -f /etc/fedora-release ]; then
-		echo "${cyan}Installing Firejail...${coloroff}";
+		echo -e "${cyan}Installing Firejail...${coloroff}";
 		dnf install firejail;
 		firecfg;
 	fi
 
 	#GPG
 	if [ -f /etc/fedora-release ]; then
-		echo "${cyan}Installing GnuPG...${coloroff}";
+		echo -e "${cyan}Installing GnuPG...${coloroff}";
 		dnf install gnupg2 pinentry;
 	fi
 
 	#real-ucode
 	if [ -f /etc/fedora-release ]; then
-		echo "${cyan}Installing latest microcodes...${coloroff}";
+		echo -e "${cyan}Installing latest microcodes...${coloroff}";
 		dnf install real-ucode;
 	fi
 
 	#Dependencies
 	if [ -f /etc/fedora-release ]; then
-		echo "Installing various important dependencies...";
+		echo -e "Installing various important dependencies...";
 		dnf install wget curl;
 		dnf install python3 python3-devel;
 		dnf install kernel-devel kernel-headers;
@@ -279,8 +279,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#Services
 	if [ -x /usr/bin/systemctl ]; then
-		echo "${cyan}Disabling unnecessary services...${coloroff}";
-		echo "${yellow}This may take a moment....${coloroff}";
+		echo -e "${cyan}Disabling unnecessary services...${coloroff}";
+		echo -e "${yellow}This may take a moment....${coloroff}";
 		systemctl disable gssproxy.service --now; #Auth
 		systemctl disable pcscd.service pcscd.socket --now; #Smartcards
 		systemctl disable abrtd.service abrt-journal-core.service abrt-oops.service abrt-pstoreoops.service abrt-vmcore.service abrt-xorg.service --now; #ABRT
@@ -299,41 +299,41 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	# Debloat
 	if [ -f /etc/fedora-release ]; then
-		echo "Debloating...";
-		echo "${yellow}This may take a moment....${coloroff}";
+		echo -e "Debloating...";
+		echo -e "${yellow}This may take a moment....${coloroff}";
 		dnf remove abrt dos2unix evince fedora-bookmarks fedora-chromium-config gnome-connections gnome-remote-desktop gnome-tour gvfs-smb ibus-typing-booster kpartx realmd samba-client sos 'sssd*' texlive-libs totem yelp;
 	fi
 
 	#HARMFUL PACKAGES
 	if [ -f /etc/fedora-release ]; then
-		echo "Removing dangerous/harmful packages...";
-		echo "";
+		echo -e "Removing dangerous/harmful packages...";
+		echo -e "";
 		dnf install remove-retired-packages;
 		remove-retired-packages;
-		echo "ClamTK: No longer maintained https://github.com/dave-theunsub/clamtk/issues/163";
+		echo -e "ClamTK: No longer maintained https://github.com/dave-theunsub/clamtk/issues/163";
 		dnf remove clamtk;
 		flatpak uninstall --system com.gitlab.davem.ClamTk;
 		flatpak uninstall --user com.gitlab.davem.ClamTk;
-		echo "Filezilla: Adware/Spying https://wikipedia.org/wiki/FileZilla#Bundled_adware_issues";
+		echo -e "Filezilla: Adware/Spying https://wikipedia.org/wiki/FileZilla#Bundled_adware_issues";
 		dnf remove filezilla;
 		flatpak uninstall --system org.filezillaproject.Filezilla;
 		flatpak uninstall --user org.filezillaproject.Filezilla;
-		echo "Google Chrome: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
+		echo -e "Google Chrome: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
 		dnf remove google-chrome;
 		flatpak uninstall --system com.google.chrome com.google.ChromeDev;
 		flatpak uninstall --user com.google.chrome com.google.ChromeDev;
-		echo "Chromium: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
+		echo -e "Chromium: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
 		dnf remove chromium;
 		flatpak uninstall --system org.chromium.Chromium;
 		flatpak uninstall --user org.chromium.Chromium;
-		echo "Microsoft Edge: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
+		echo -e "Microsoft Edge: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
 		dnf remove microsoft-edge-stable;
 		flatpak uninstall --system com.microsoft.Edge com.microsoft.EdgeDev;
 		flatpak uninstall --user com.microsoft.Edge com.microsoft.EdgeDev;
-		echo "Opera: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
+		echo -e "Opera: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
 		flatpak uninstall --system com.opera.Opera;
 		flatpak uninstall --user com.opera.Opera;
-		echo "Discord: Spyware, just use within your browser if you NEED to...";
+		echo -e "Discord: Spyware, just use within your browser if you NEED to...";
 		dnf remove discord;
 		flatpak uninstall --system com.discordapp.Discord;
 		flatpak uninstall --user com.discordapp.Discord;
@@ -341,8 +341,8 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#Flatpak Hardening
 	if [ -x /usr/bin/flatpak ]; then
-		echo "${red}Do you want to harden your Flatpaks (Recommended)?${coloroff}";
-		echo "NOTE: You will likely need to set overrides for apps as needed via Flatseal or your DE if supported (Ex. KDE)";
+		echo -e "${red}Do you want to harden your Flatpaks (Recommended)?${coloroff}";
+		echo -e "NOTE: You will likely need to set overrides for apps as needed via Flatseal or your DE if supported (Ex. KDE)";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -357,12 +357,12 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#Stealth Firewall
 	if [ -x /usr/bin/firewall-cmd ]; then
-		echo "${red}Do you want to harden your Firewall (Recommended)?${coloroff}";
-		echo "NOTE: This will block incoming connections and isn't recommended for server environments";
+		echo -e "${red}Do you want to harden your Firewall (Recommended)?${coloroff}";
+		echo -e "NOTE: This will block incoming connections and isn't recommended for server environments";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
-					echo "${cyan}Hardening Firewall...${coloroff}";
+					echo -e "${cyan}Hardening Firewall...${coloroff}";
 					firewall-cmd --set-default-zone=drop;
 					#firewall-cmd --add-protocol=icmp --permanent;
 					firewall-cmd --add-protocol=ipv6-icmp --permanent;
@@ -378,11 +378,11 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#Hostname
 	if [ -x /usr/bin/hostnamectl ]; then
-		echo "${red}Would you like to set a generic hostname? (Recommended, especially for mobile devices)?${coloroff}";
+		echo -e "${red}Would you like to set a generic hostname? (Recommended, especially for mobile devices)?${coloroff}";
 		select yn in "Yes" "No"; do
 		case $yn in
 				Yes )
-					echo "${cyan}Setting generic hostname...${coloroff}";
+					echo -e "${cyan}Setting generic hostname...${coloroff}";
 					nmcli general reload conf;
 					hostnamectl set-hostname "localhost";
 					hostnamectl --transient hostname '';
@@ -396,14 +396,14 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	# More Debloating
 	if [ -f /etc/fedora-release ]; then
-		echo "${blue}Would you like to remove GNOME Calendar?${coloroff}";
+		echo -e "${blue}Would you like to remove GNOME Calendar?${coloroff}";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
 					dnf remove gnome-calendar;
 					break;;
 				No )
-					echo "${red}Would you like to replace GNOME Calendar with the Flatpak? (Recommended)${coloroff}";
+					echo -e "${red}Would you like to replace GNOME Calendar with the Flatpak? (Recommended)${coloroff}";
 					select yn in "Yes" "No"; do
 						case $yn in
 								Yes )
@@ -420,14 +420,14 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "${blue}Would you like to remove GNOME Camera?${coloroff}";
+		echo -e "${blue}Would you like to remove GNOME Camera?${coloroff}";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
 					dnf remove snapshot;
 					break;;
 				No )
-					echo "${red}Would you like to replace GNOME Camera with the Flatpak? (Recommended)${coloroff}";
+					echo -e "${red}Would you like to replace GNOME Camera with the Flatpak? (Recommended)${coloroff}";
 					select yn in "Yes" "No"; do
 						case $yn in
 								Yes )
@@ -444,14 +444,14 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to remove GNOME Contacts?";
+		echo -e "Would you like to remove GNOME Contacts?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
 					dnf remove gnome-contacts;
 					break;;
 				No )
-					echo "Would you like to replace GNOME Contacts with the Flatpak? (Recommended)";
+					echo -e "Would you like to replace GNOME Contacts with the Flatpak? (Recommended)";
 					select yn in "Yes" "No"; do
 						case $yn in
 								Yes )
@@ -468,14 +468,14 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to remove GNOME Maps?";
+		echo -e "Would you like to remove GNOME Maps?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
 					dnf remove gnome-maps;
 					break;;
 				No )
-					echo "Would you like to replace GNOME Maps with the Flatpak? (Recommended)";
+					echo -e "Would you like to replace GNOME Maps with the Flatpak? (Recommended)";
 					select yn in "Yes" "No"; do
 						case $yn in
 								Yes )
@@ -493,14 +493,14 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to remove GNOME Weather?";
+		echo -e "Would you like to remove GNOME Weather?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
 					dnf remove gnome-weather;
 					break;;
 				No )
-					echo "Would you like to replace GNOME Weather with the Flatpak? (Recommended)";
+					echo -e "Would you like to replace GNOME Weather with the Flatpak? (Recommended)";
 					select yn in "Yes" "No"; do
 						case $yn in
 								Yes )
@@ -518,7 +518,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to remove Japanese Input Characters (Anthy)?";
+		echo -e "Would you like to remove Japanese Input Characters (Anthy)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -531,7 +531,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to remove Korean Input Characters (Hangul)?";
+		echo -e "Would you like to remove Korean Input Characters (Hangul)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -544,7 +544,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to remove Mandarin Input Characters (Pinyin)?";
+		echo -e "Would you like to remove Mandarin Input Characters (Pinyin)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -557,7 +557,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to remove Chinese Input Characters (Zhuyin)?";
+		echo -e "Would you like to remove Chinese Input Characters (Zhuyin)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -570,7 +570,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to remove Multilingual Input (M17n)?";
+		echo -e "Would you like to remove Multilingual Input (M17n)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -584,7 +584,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	# Replacing built-in apps with Flatpaks
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to replace GNOME Calculator with the Flatpak (Recommended)?";
+		echo -e "Would you like to replace GNOME Calculator with the Flatpak (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -598,7 +598,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to replace GNOME Clocks with the Flatpak (Recommended)?";
+		echo -e "Would you like to replace GNOME Clocks with the Flatpak (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -612,7 +612,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to replace GNOME Disk Usage Analyzer with the Flatpak (Recommended)?";
+		echo -e "Would you like to replace GNOME Disk Usage Analyzer with the Flatpak (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -626,7 +626,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to replace GNOME Document Scanner with the Flatpak (Recommended)?";
+		echo -e "Would you like to replace GNOME Document Scanner with the Flatpak (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -640,7 +640,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to replace GNOME Font Viewer with the Flatpak (Recommended)?";
+		echo -e "Would you like to replace GNOME Font Viewer with the Flatpak (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -654,7 +654,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to replace GNOME Image Viewer with the Flatpak (Recommended)?";
+		echo -e "Would you like to replace GNOME Image Viewer with the Flatpak (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -668,7 +668,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to replace Fedora Media Writer with the Flatpak (Recommended)?";
+		echo -e "Would you like to replace Fedora Media Writer with the Flatpak (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -683,7 +683,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to replace LibreOffice with the Flatpak (Recommended)?";
+		echo -e "Would you like to replace LibreOffice with the Flatpak (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -698,11 +698,11 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#Codecs
 	if [ -f /etc/fedora-release ]; then
-		echo "Would you like to install codecs & dependencies for media playback? (Recommended)?";
+		echo -e "Would you like to install codecs & dependencies for media playback? (Recommended)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
-					echo "Installing codecs...";
+					echo -e "Installing codecs...";
 					dnf group install multimedia --with-optional --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin;
 					dnf group install sound-and-video;
 					dnf swap ffmpeg-free ffmpeg --allowerasing;
@@ -727,7 +727,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi;
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Do you want to harden Firefox with Phoenix? https://phoenix.celenity.dev (Recommended)";
+		echo -e "Do you want to harden Firefox with Phoenix? https://phoenix.celenity.dev (Recommended)";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -740,7 +740,7 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 	fi
 
 	if [ -f /etc/fedora-release ]; then
-		echo "Do you want to harden Thunderbird with Dove? https://dove.celenity.dev (Recommended)";
+		echo -e "Do you want to harden Thunderbird with Dove? https://dove.celenity.dev (Recommended)";
 		select yn in "Yes" "No"; do
 			case $yn in
 				Yes )
@@ -754,22 +754,22 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 
 	#Clean-up
 	if [ -f /etc/fedora-release ]; then
-		echo "${red}Cleaning up DNF...${coloroff}";
+		echo -e "${red}Cleaning up DNF...${coloroff}";
 		dnf autoremove;
 		dnf clean all;
 
-		echo "${red}Updating DNF Cache...${coloroff}";
+		echo -e "${red}Updating DNF Cache...${coloroff}";
 		dnf update --refresh;
 
-		echo "${red}Updating Flatpak Cache...${coloroff}";
+		echo -e "${red}Updating Flatpak Cache...${coloroff}";
 		flatpak --system update;
 		flatpak --user update;
 
-		echo "${red}Updating Firejail...${coloroff}";
+		echo -e "${red}Updating Firejail...${coloroff}";
 		firecfg;
 	fi;
 
-	echo "Done! :) Now make sure to run slingshot again - this time without sudo, for additional options and configurations.";
+	echo -e "Done! :) Now make sure to run slingshot again - this time without sudo, for additional options and configurations.";
 else
 	#Looks
 	if [ -d "/usr/share/fonts/adobe-source-code-pro" ]; then
@@ -800,7 +800,7 @@ else
 	fi;
 
 	#Night Light
-	echo "Do you want to enable GNOME Night Light?";
+	echo -e "${cyan}Do you want to enable GNOME Night Light?${coloroff}";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
@@ -813,7 +813,7 @@ else
 	done
 
 	#Power #TODO: MATE
-	echo "Do you want to enable auto suspend?";
+	echo -e "Do you want to enable auto suspend?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
@@ -828,7 +828,7 @@ else
 	done
 
 	#Search
-	echo "Do you want to enable GNOME Search Providers? (https://developer.gnome.org/documentation/tutorials/search-provider.html)";
+	echo -e "Do you want to enable GNOME Search Providers? (https://developer.gnome.org/documentation/tutorials/search-provider.html)";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
@@ -839,7 +839,7 @@ else
 				break;;
 		esac
 	done
-	echo "Do you want to enable File Indexing?";
+	echo -e "Do you want to enable File Indexing?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )
@@ -857,7 +857,7 @@ else
 	done
 
 	#Themes
-	echo "Do you want to enable dark mode?";
+	echo -e "Do you want to enable dark mode?";
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes )

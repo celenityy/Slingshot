@@ -1,10 +1,10 @@
 #!/bin/sh
 
-if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo 'This script needs to be run as root!'; exit 1; fi;
+if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo -e 'This script needs to be run as root!'; exit 1; fi;
 
 if [ -f /etc/fedora-release ]; then
-	echo "Installing Brave Browser";
-fi;
+	echo -e "Installing Brave Browser...";
+fi
 
 if [ -f /etc/fedora-release ]; then
 	dnf config-manager addrepo --id=brave-browser --set=name='Brave Browser' --set=baseurl='https://brave-browser-rpm-release.s3.brave.com/$basearch';
@@ -12,5 +12,5 @@ if [ -f /etc/fedora-release ]; then
 	dnf update --refresh;
 	dnf install brave-browser;
 else
-	echo "Currently only Fedora is supported";
-fi;
+	echo -e "Sorry, only Fedora is currently supported.";
+fi

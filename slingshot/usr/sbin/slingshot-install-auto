@@ -14,14 +14,14 @@ if [ "$(/usr/bin/id -u)" -ne "0" ]; then echo -e "${red}ERROR: This script needs
 
 if [ -f /etc/fedora-release ]; then
 
-	echo "${red}Cleaning up DNF...${coloroff}";
+	echo -e "${red}Cleaning up DNF...${coloroff}";
 	dnf autoremove;
 	dnf clean all -y;
 
-	echo "${red}Updating DNF Cache...${coloroff}";
+	echo -e "${red}Updating DNF Cache...${coloroff}";
 	dnf update --refresh -y;
 
-	echo "${red}Adding DNF Repositories...${coloroff}";
+	echo -e "${red}Adding DNF Repositories...${coloroff}";
 	dnf config-manager addrepo --id=brave-browser --set=name='Brave Browser' --set=baseurl='https://brave-browser-rpm-release.s3.brave.com/$basearch' -y;
 	rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc;
 	dnf copr enable secureblue/hardened-chromium -y;
@@ -29,105 +29,105 @@ if [ -f /etc/fedora-release ]; then
 	dnf config-manager addrepo --from-repofile='https://slingshot.celenity.dev/vscodium.repo' -y;
 	dnf config-manager addrepo --from-repofile='https://repo.ivpn.net/stable/fedora/generic/ivpn.repo' -y;
 
-	echo "${red}Updating DNF Cache...${coloroff}";
+	echo -e "${red}Updating DNF Cache...${coloroff}";
 	dnf update --refresh -y;
 
-	echo "${red}Updating Flatpak Cache...${coloroff}";
+	echo -e "${red}Updating Flatpak Cache...${coloroff}";
 	flatpak --system update -y;
 	flatpak --user update -y;
 
-	echo "${red}Updating Firejail...${coloroff}";
+	echo -e "${red}Updating Firejail...${coloroff}";
 	firecfg;
 	
-	echo "${red}Installing Brave...${coloroff}";
+	echo -e "${red}Installing Brave...${coloroff}";
 	dnf install brave-browser -y;
 
-	echo "${red}Installing Hardened Chromium...${coloroff}";
+	echo -e "${red}Installing Hardened Chromium...${coloroff}";
 	dnf install hardened-chromium -y;
 
-	echo "${red}Installing Mullvad Browser...${coloroff}";
+	echo -e "${red}Installing Mullvad Browser...${coloroff}";
 	dnf install mullvad-browser -y;
 
-	echo "${red}Installing Tor Browser...${coloroff}";
+	echo -e "${red}Installing Tor Browser...${coloroff}";
 	dnf install tor torbrowser-launcher -y;
 
-	echo "Installing Fedora's Recommended Developer Tools...";
-	echo "${red}Installing the "Development Tools" group...${coloroff}";
+	echo -e "Installing Fedora's Recommended Developer Tools...";
+	echo -e "${red}Installing the "Development Tools" group...${coloroff}";
 	dnf group install development-tools -y;
 
-	echo "${red}Installing General Development Languages/Support/Dependencies...${coloroff}";
+	echo -e "${red}Installing General Development Languages/Support/Dependencies...${coloroff}";
 	dnf install cargo cmake coreutils copr-rpmbuild fedpkg git-core make maven mercurial mock pacman perl proguard rpkg rpm-build rpmdevtools rpmlint ruby rust -y;
 	
-	echo "${red}Installing nano...${coloroff}";
+	echo -e "${red}Installing nano...${coloroff}";
 	dnf install nano -y;
 
-	echo "${red}Installing VSCodium...${coloroff}";
+	echo -e "${red}Installing VSCodium...${coloroff}";
 	dnf install codium -y;
 
-	echo "${red}Installing ADB...${coloroff}";
+	echo -e "${red}Installing ADB...${coloroff}";
 	dnf install android-tools -y;
 
-	echo "Installing Android Studio...";
-	echo "${red}Installing Android Studio...${coloroff}";
+	echo -e "Installing Android Studio...";
+	echo -e "${red}Installing Android Studio...${coloroff}";
 	flatpak --user install com.google.AndroidStudio -y;
-	echo "${red}Granting Android Studio necessary permissions...${coloroff}";
+	echo -e "${red}Granting Android Studio necessary permissions...${coloroff}";
 	flatpak --user override com.google.AndroidStudio --device=dri --device=kvm --share=network;
 
-	echo "${red}Installing enjarify...${coloroff}";
+	echo -e "${red}Installing enjarify...${coloroff}";
 	dnf install enjarify -y;
 
-	echo "Installing Fedora's Recommended Virtualization Software...";
-	echo "${red}Installing the "Virtualization" group...${coloroff}";
+	echo -e "Installing Fedora's Recommended Virtualization Software...";
+	echo -e "${red}Installing the "Virtualization" group...${coloroff}";
 	dnf group install virtualization --with-optional -y;
 
-	echo "${red}Installing Signal...${coloroff}";
+	echo -e "${red}Installing Signal...${coloroff}";
 	flatpak --user install org.signal.Signal -y;
-	echo "${red}Granting Signal necessary permissions...${coloroff}";
+	echo -e "${red}Granting Signal necessary permissions...${coloroff}";
 	flatpak --user override org.signal.Signal --share=network --socket=pulseaudio;
 
-	echo "${red}Installing VLC...${coloroff}";
+	echo -e "${red}Installing VLC...${coloroff}";
 	flatpak --user install org.videolan.VLC org.videolan.VLC.Plugin.pause_click org.videolan.VLC.Plugin.fdkaac org.videolan.VLC.Plugin.bdj org.videolan.VLC.Plugin.makemkv -y;
-	echo "${red}Granting VLC necessary permissions...${coloroff}";
+	echo -e "${red}Granting VLC necessary permissions...${coloroff}";
 	flatpak --user override org.videolan.VLC --device=dri --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
 	
-	echo "${red}Installing Lollypop...${coloroff}";
+	echo -e "${red}Installing Lollypop...${coloroff}";
 	flatpak --user install org.gnome.Lollypop -y;
 	
-	echo "${red}Installing qBittorrent...${coloroff}";
+	echo -e "${red}Installing qBittorrent...${coloroff}";
 	flatpak --user install org.qbittorrent.qBittorrent -y;
-	echo "${red}Granting qBittorrent necessary permissions...${coloroff}";
+	echo -e "${red}Granting qBittorrent necessary permissions...${coloroff}";
 	flatpak --user override org.qbittorrent.qBittorrent --share=network;
 
-	echo "${red}Installing Finamp..${coloroff}";
+	echo -e "${red}Installing Finamp..${coloroff}";
 	flatpak --user install com.unicornsonlsd.finamp -y;
-	echo "${red}Granting Finamp necessary permissions...${coloroff}";
+	echo -e "${red}Granting Finamp necessary permissions...${coloroff}";
 	flatpak --user override com.unicornsonlsd.finamp --share=network --socket=pulseaudio; 
 
-	echo "${red}Installing OBS...${coloroff}";
+	echo -e "${red}Installing OBS...${coloroff}";
 	flatpak --user install com.obsproject.Studio com.obsproject.Studio.Plugin.InputOverlay com.obsproject.Studio.Plugin.Gstreamer com.obsproject.Studio.Plugin.GStreamerVaapi com.obsproject.Studio.Plugin.CompositeBlur com.obsproject.Studio.Plugin.BackgroundRemoval -y;
-	echo "${red}Granting OBS necessary permissions...${coloroff}";
+	echo -e "${red}Granting OBS necessary permissions...${coloroff}";
 	flatpak --user override com.obsproject.Studio --device=dri --socket=pulseaudio;
 
-	echo "${red}Installing WINE...${coloroff}";
+	echo -e "${red}Installing WINE...${coloroff}";
 	dnf install wine -y;
 	dnf install winetricks -y;
 
-	echo "${red}Installing IVPN...${coloroff}";
+	echo -e "${red}Installing IVPN...${coloroff}";
 	dnf install ivpn ivpn-ui -y;
 	
-	echo "${red}Installing Obsidian...${coloroff}";
+	echo -e "${red}Installing Obsidian...${coloroff}";
 	flatpak --user install md.obsidian.Obsidian -y;
-	echo "${red}Granting Obsidian necessary permissions...${coloroff}";
+	echo -e "${red}Granting Obsidian necessary permissions...${coloroff}";
 	mkdir -p ~/Documents/Obsidian;
 	flatpak --user override md.obsidian.Obsidian --share=network --filesystem=xdg-documents/Obsidian;
 
-	echo "Install MakeMKV? (Flatpak)";
+	echo -e "Install MakeMKV? (Flatpak)";
 		select yn in "Yes" "No"; do
 			case $yn in
 					Yes )
-						echo "${red}Installing MakeMKV...${coloroff}";
+						echo -e "${red}Installing MakeMKV...${coloroff}";
 						flatpak --user install com.makemkv.MakeMKV -y;
-						echo "${red}Granting MakeMKV necessary permissions...${coloroff}";
+						echo -e "${red}Granting MakeMKV necessary permissions...${coloroff}";
 						flatpak --user override com.makemkv.MakeMKV --device=all --share=network;
 						break;;
 					No )
@@ -135,13 +135,13 @@ if [ -f /etc/fedora-release ]; then
 				esac
 			done
 
-	echo "Install Asunder? (Flatpak)";
+	echo -e "Install Asunder? (Flatpak)";
 		select yn in "Yes" "No"; do
 			case $yn in
 					Yes )
-						echo "${red}Installing Asunder...${coloroff}";
+						echo -e "${red}Installing Asunder...${coloroff}";
 						flatpak --user install ca.littlesvr.asunder;
-						echo "${red}Granting Asunder necessary permissions...${coloroff}";
+						echo -e "${red}Granting Asunder necessary permissions...${coloroff}";
 						mkdir -p ~/Music/Asunder;
 						flatpak --user override ca.littlesvr.asunder --socket=x11 --device=all --share=network --filesystem=xdg-music/Asunder;
 						break;;
@@ -150,13 +150,13 @@ if [ -f /etc/fedora-release ]; then
 				esac
 			done
 
-	echo "Install Audacity? (Flatpak)";
+	echo -e "Install Audacity? (Flatpak)";
 		select yn in "Yes" "No"; do
 			case $yn in
 					Yes )
-						echo "${red}Installing Audacity...${coloroff}";
+						echo -e "${red}Installing Audacity...${coloroff}";
 						flatpak --user install org.audacityteam.Audacity -y;
-						echo "${red}Granting Audacity necessary permissions...${coloroff}";
+						echo -e "${red}Granting Audacity necessary permissions...${coloroff}";
 						flatpak --user override org.audacityteam.Audacity --socket=pulseaudio;
 						break;;
 					No )
@@ -164,15 +164,15 @@ if [ -f /etc/fedora-release ]; then
 				esac
 			done
 
-	echo "Install Steam (Flatpak)?";
+	echo -e "Install Steam (Flatpak)?";
 		select yn in "Yes" "No"; do
 			case $yn in
 					Yes )
-						echo "${red}Installing Steam...${coloroff}";
+						echo -e "${red}Installing Steam...${coloroff}";
 						flatpak --user install com.valvesoftware.Steam com.valvesoftware.Steam.Utility.steamtinkerlaunch com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.valvesoftware.Steam.Utility.InhibitScreensaver -y;
-						echo "${red}Granting Steam necessary permissions...${coloroff}";
+						echo -e "${red}Granting Steam necessary permissions...${coloroff}";
 						flatpak --user override com.valvesoftware.Steam --nosocket=wayland --socket=fallback-x11 --device=dri --share=network --socket=pulseaudio --nosocket=wayland --socket=fallback-x11;
-						echo "${red}Disabling hardened_malloc for Steam (Causes it to break)...${coloroff}";
+						echo -e "${red}Disabling hardened_malloc for Steam (Causes it to break)...${coloroff}";
 						flatpak --user override com.valvesoftware.Steam --nofilesystem=host-os --unset-env=LD_PRELOAD;
 						break;;
 					No )
@@ -180,13 +180,13 @@ if [ -f /etc/fedora-release ]; then
 				esac
 			done
 
-	echo "Install Prism Launcher? (Minecraft, Flatpak)";
+	echo -e "Install Prism Launcher? (Minecraft, Flatpak)";
 		select yn in "Yes" "No"; do
 			case $yn in
 					Yes )
-						echo "${red}Installing Prism Launcher...${coloroff}";
+						echo -e "${red}Installing Prism Launcher...${coloroff}";
 						flatpak --user install org.prismlauncher.PrismLauncher -y;
-						echo "${red}Granting Prism Launcher necessary permissions...${coloroff}";
+						echo -e "${red}Granting Prism Launcher necessary permissions...${coloroff}";
 						flatpak --user override org.prismlauncher.PrismLauncher --device=dri --share=network --socket=pulseaudio;
 						break;;
 					No )
@@ -194,11 +194,11 @@ if [ -f /etc/fedora-release ]; then
 				esac
 			done
 
-	echo "Protontricks? (Flatpak)";
+	echo -e "Protontricks? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing Protontricks...${coloroff}";
+								echo -e "${red}Installing Protontricks...${coloroff}";
 								flatpak --user install com.github.Matoking.protontricks -y;
 								break;;
 							No )
@@ -206,13 +206,13 @@ if [ -f /etc/fedora-release ]; then
 						esac
 					done
 
-	echo "ProtonUp-Qt? (Flatpak)";
+	echo -e "ProtonUp-Qt? (Flatpak)";
 				select yn in "Yes" "No"; do
 					case $yn in
 							Yes )
-								echo "${red}Installing ProtonUp-Qt...${coloroff}";
+								echo -e "${red}Installing ProtonUp-Qt...${coloroff}";
 								flatpak --user install net.davidotek.pupgui2 -y;
-								echo "${red}Granting ProtonUp-Qt necessary permissions...${coloroff}";
+								echo -e "${red}Granting ProtonUp-Qt necessary permissions...${coloroff}";
 								flatpak --user override net.davidotek.pupgui2 --share=network;
 								break;;
 							No )
@@ -220,18 +220,18 @@ if [ -f /etc/fedora-release ]; then
 						esac
 					done
 
-	echo "${red}Cleaning up DNF...${coloroff}";
+	echo -e "${red}Cleaning up DNF...${coloroff}";
 	dnf autoremove;
 	dnf clean all -y;
 
-	echo "${red}Updating DNF Cache...${coloroff}";
+	echo -e "${red}Updating DNF Cache...${coloroff}";
 	dnf update --refresh -y;
 
-	echo "${red}Updating Flatpak Cache...${coloroff}";
+	echo -e "${red}Updating Flatpak Cache...${coloroff}";
 	flatpak --system update -y;
 	flatpak --user update -y;
 
-	echo "${red}Updating Firejail...${coloroff}";
+	echo -e "${red}Updating Firejail...${coloroff}";
 	firecfg;
 
 fi;
