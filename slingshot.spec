@@ -147,6 +147,6 @@ install -Dm644 %{_sourcedir}/README.md %{buildroot}/usr/share/doc/slingshot/READ
 /usr/share/doc/slingshot/README.md
 
 %changelog
-* Friday November 22 celenity <celenity@celenity.dev> - 20241122-2
+* Fri Nov 22 2024 celenity <celenity@celenity.dev>
 - Disables FWUPD Reporting & P2P Sharing
 - Tweaks & minor fixes
