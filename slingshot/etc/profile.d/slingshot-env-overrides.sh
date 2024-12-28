@@ -38,11 +38,18 @@ export ELECTRON_OZONE_PLATFORM_HINT='auto';
 # gpg
 export GPG_TTY=$(tty);
 
-# disable JIT in GNOME JavaScript (used in various built-in GNOME applications)
+# disable JIT in GNOME's JavaScript Engine
+# https://gitlab.gnome.org/GNOME/gjs/-/blob/master/doc/Environment.md#javascript-engine
 export GJS_DISABLE_JIT=1;
 
 # disable JIT in WebKit
+# https://trac.webkit.org/wiki/EnvironmentVariables
 export JavaScriptCoreUseJIT=0;
+export JSC_useFTLJI=0;
+
+# enforce WebKit's web process sandbox
+# https://trac.webkit.org/wiki/EnvironmentVariables
+export WEBKIT_FORCE_SANDBOX=1;
 
 # disable telemetry for various programs
 # https://consoledonottrack.com/
