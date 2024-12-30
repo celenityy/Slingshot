@@ -29,11 +29,24 @@ export GST_VAAPI_ALL_DRIVERS=1;
 # disable thread local malloc cache
 export GLIBC_TUNABLES='glibc.malloc.tcache_count=0';
 
-# enable wayland for firefox
-export MOZ_ENABLE_WAYLAND=1;
+# Disable Crash Reporting in Mozilla software (Taken from my Phoenix)
+# https://firefox-source-docs.mozilla.org/toolkit/crashreporter/crashreporter/index.html#user-specified-environment-variables
+export MOZ_CRASHREPORTER=0;
+export MOZ_CRASHREPORTER_DISABLE=1;
+export MOZ_CRASHREPORTER_NO_REPORT=1;
+export MOZ_CRASHREPORTER_URL="data;";
+
+# Enable Wayland in Mozilla software (Taken from my Phoenix)
+# Credit to Rasmus: https://askubuntu.com/users/13884/rasmus
+# https://askubuntu.com/questions/1456684/how-to-initialize-firefox-on-wayland-always-by-default
+if [ "$XDG_SESSION_TYPE" == "wayland" ]; then
+    export MOZ_ENABLE_WAYLAND=1
+fi
 
 # enable wayland for electron apps
-export ELECTRON_OZONE_PLATFORM_HINT='auto';
+if [ "$XDG_SESSION_TYPE" == "wayland" ]; then
+    export ELECTRON_OZONE_PLATFORM_HINT='auto'
+fi
 
 # gpg
 export GPG_TTY=$(tty);
