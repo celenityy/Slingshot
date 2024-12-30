@@ -3,7 +3,7 @@ Slingshot
 
 Overview
 --------
-Slingshot is a configuration utility for GNU/Linux Systems with an emphasis on improving privacy, security, & freedom - as well as performance, & usability where possible. It is based on the excellent [Brace](https://codeberg.org/divested/brace) project, but with additions from TommmyTran732's [Linux-Setup-Scripts](https://github.com/TommyTran732/Linux-Setup-Scripts), as well as my own personal tweaks & changes.
+Slingshot is a configuration utility for GNU/Linux Systems with an emphasis on improving privacy, security, & freedom - as well as performance, & usability where possible. It is based on the excellent [Brace](https://codeberg.org/divested/brace) project, but with additions from [Secureblue](https://github.com/secureblue/secureblue), TommyTran732's [Linux-Setup-Scripts](https://github.com/TommyTran732/Linux-Setup-Scripts), as well as my own personal tweaks & changes.
 
 Compatibility
 -------------
