@@ -1,41 +1,7 @@
-image: fedora:latest
+image: busybox
 
 default:
   cache: []
-
-before_script:
-  - dnf update -y
-  - dnf install -y acl gawk which fakeroot rpm-build dpkg dpkg-dev pacman
-  - umask 0022
-  - setfacl --restore=permissions.facl
-
-build_rpm:
-  stage: build
-  script:
-    - rpmbuild -ba slingshot.spec
-  artifacts:
-    paths:
-        - build/noarch/slingshot*.rpm
-
-build_deb:
-  stage: build
-  script:
-    - dpkg-deb --root-owner-group --build slingshot && dpkg-name slingshot.deb
-  artifacts:
-    paths:
-        - slingshot*.deb
-
-build_arch:
-  stage: build
-  script:
-    - awk -i inplace '!/exit \$E_ROOT/' $(which makepkg)
-    - awk -i inplace '!/lint_package/' $(which makepkg)
-    - makepkg
-  artifacts:
-    paths:
-        - slingshot*.pkg.tar.*
-
-image: busybox
 
 pages:
   stage: deploy
