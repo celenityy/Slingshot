@@ -1,5 +1,8 @@
 image: fedora:latest
 
+default:
+  cache: []
+
 before_script:
   - dnf update -y
   - dnf install -y acl gawk which fakeroot rpm-build dpkg dpkg-dev pacman
@@ -31,3 +34,18 @@ build_arch:
   artifacts:
     paths:
         - slingshot*.pkg.tar.*
+
+image: busybox
+
+pages:
+  stage: deploy
+  script:
+    - echo "The site will be deployed to $CI_PAGES_URL"
+    - mkdir .public
+    - cp -rf -- * .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
