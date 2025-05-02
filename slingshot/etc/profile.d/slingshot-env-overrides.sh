@@ -52,20 +52,20 @@ fi
 export GPG_TTY=$(tty);
 
 # disable JIT in GNOME's JavaScript Engine
-# https://gitlab.gnome.org/GNOME/gjs/-/blob/master/doc/Environment.md#javascript-engine
+## https://gitlab.gnome.org/GNOME/gjs/-/blob/master/doc/Environment.md#javascript-engine
 export GJS_DISABLE_JIT=1;
 
 # disable JIT in WebKit
-# https://trac.webkit.org/wiki/EnvironmentVariables
+## https://trac.webkit.org/wiki/EnvironmentVariables
 export JavaScriptCoreUseJIT=0;
 export JSC_useFTLJI=0;
 
 # enforce WebKit's web process sandbox
-# https://trac.webkit.org/wiki/EnvironmentVariables
+## https://trac.webkit.org/wiki/EnvironmentVariables
 export WEBKIT_FORCE_SANDBOX=1;
 
 # disable telemetry for various programs
-# https://consoledonottrack.com/
+## https://consoledonottrack.com/
 export DO_NOT_TRACK=1;
 export AZURE_CORE_COLLECT_TELEMETRY=0;
 export DOTNET_CLI_TELEMETRY_OPTOUT=1;
@@ -74,7 +74,7 @@ export HOMEBREW_NO_ANALYTICS=1;
 export POWERSHELL_TELEMETRY_OPTOUT=1;
 export SAM_CLI_TELEMETRY=0;
 
-# harden homebrew (if installed)
+## harden homebrew (if installed)
 export HOMEBREW_NO_INSECURE_REDIRECT=1;
 export HOMEBREW_NO_ENV_HINTS=1;
 
