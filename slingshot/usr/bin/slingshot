@@ -318,25 +318,6 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		dnf remove filezilla;
 		flatpak uninstall --system org.filezillaproject.Filezilla;
 		flatpak uninstall --user org.filezillaproject.Filezilla;
-		echo -e "Google Chrome: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		dnf remove google-chrome;
-		flatpak uninstall --system com.google.chrome com.google.ChromeDev;
-		flatpak uninstall --user com.google.chrome com.google.ChromeDev;
-		echo -e "Chromium: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		dnf remove chromium;
-		flatpak uninstall --system org.chromium.Chromium;
-		flatpak uninstall --user org.chromium.Chromium;
-		echo -e "Microsoft Edge: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		dnf remove microsoft-edge-stable;
-		flatpak uninstall --system com.microsoft.Edge com.microsoft.EdgeDev;
-		flatpak uninstall --user com.microsoft.Edge com.microsoft.EdgeDev;
-		echo -e "Opera: Spyware - Use Firefox with Phoenix instead, otherwise Brave if you NEED Chromium...";
-		flatpak uninstall --system com.opera.Opera;
-		flatpak uninstall --user com.opera.Opera;
-		echo -e "Discord: Spyware, just use within your browser if you NEED to...";
-		dnf remove discord;
-		flatpak uninstall --system com.discordapp.Discord;
-		flatpak uninstall --user com.discordapp.Discord;
 	fi
 
 	#Flatpak Hardening
