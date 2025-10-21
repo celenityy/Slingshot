@@ -282,7 +282,6 @@ if [ "$(/usr/bin/id -u)" -eq "0" ]; then
 		echo -e "${cyan}Disabling unnecessary services...${coloroff}";
 		echo -e "${yellow}This may take a moment....${coloroff}";
 		systemctl disable gssproxy.service --now; #Auth
-		systemctl disable pcscd.service pcscd.socket --now; #Smartcards
 		systemctl disable abrtd.service abrt-journal-core.service abrt-oops.service abrt-pstoreoops.service abrt-vmcore.service abrt-xorg.service --now; #ABRT
 		systemctl disable atd.service --now; #At/Batch
 		systemctl disable mcelog.service --now; #mcelog
